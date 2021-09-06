@@ -1,7 +1,7 @@
 {
 	"name" : "bjc/roundcube-imap",
 	"description" : "A PHP imap client class extracted from roundcubemail",
-	"license" : "GPL 3.0",
+	"license" : "GPL-3.0-or-later",
 	"keywords" : [
 		"imap"
 	],
