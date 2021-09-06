@@ -16,7 +16,7 @@
     },
 	"autoload" : {
 		"psr-4" : {
-			"bjc\\roundcube-imap\\" : "src"
+			"bjc\\roundcubeimap\\" : "src"
 		}
 	}
 }
