@@ -1,0 +1,22 @@
+{
+	"name" : "bjc/roundcube-imap",
+	"description" : "A PHP imap client class extracted from roundcubemail",
+	"license" : "GPL 3.0",
+	"keywords" : [
+		"imap"
+	],
+	"authors" : [{
+			"name" : "Benedikt Carda",
+			"email" : "carda@two-wings.net"
+		}
+	],
+	"require" : {
+	},
+	"replace": {
+    },
+	"autoload" : {
+		"psr-4" : {
+			"bjc\\roundcube-imap\\" : "src"
+		}
+	}
+}
