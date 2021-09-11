@@ -15,12 +15,10 @@ class connection {
         
         $mailboxes = $this->rcube_imap_generic->listMailboxes('', '*');
 
-        file_put_contents("/tmp/test.txt", "MAILBOXES: \n" . print_r($mailboxes, true), FILE_APPEND);
-        
         $returnarray = array();
         
-        foreach ($mailboxes as $mailbox) {
-//            $returnarray[] = new \bjc\roundcubeimap\mailbox($mailbox, $this->rcube_imap_generic);
+        foreach ($mailboxes as $mailboxname) {
+            $returnarray[] = new \bjc\roundcubeimap\mailbox($mailboxname, $this->rcube_imap_generic);
         }
         
         return $returnarray;
