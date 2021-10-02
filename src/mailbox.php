@@ -33,10 +33,18 @@ class mailbox {
         
         foreach ($result as $key => $item) {
             $key_to_lower = strtolower($key);
-            $obj->$key = $item;
+            $obj->$key_to_lower = $item;
         }
         
         return $obj;
+        
+    }
+    
+    public function getData() {
+        
+        $result = $this->rcube_imap_generic->data;
+
+        return $result;
         
     }
     
