@@ -415,7 +415,7 @@ class rcube_imap_generic
      */
     protected function eof()
     {
-        if (!is_resource($this->fp)) {
+        if (!$this->fp) {
             return true;
         }
 
@@ -564,7 +564,7 @@ class rcube_imap_generic
      * @param string $pass Password
      * @param string $type Authentication type (PLAIN/CRAM-MD5/DIGEST-MD5)
      *
-     * @return resource Connection resource on success, error code on error
+     * @return resource|int Connection resource on success, error code on error
      */
     protected function authenticate($user, $pass, $type = 'PLAIN')
     {
@@ -819,7 +819,7 @@ class rcube_imap_generic
      * @param string $user Username
      * @param string $pass Password
      *
-     * @return resource Connection resource on success, error code on error
+     * @return resource|int Connection resource on success, error code on error
      */
     protected function login($user, $password)
     {
@@ -2785,7 +2785,6 @@ class rcube_imap_generic
             return false;
         }
 
-        $result = false;
         $parts  = (array) $parts;
         $key    = $this->nextTag();
         $peeks  = [];
@@ -2803,6 +2802,8 @@ class rcube_imap_generic
             $this->setError(self::ERROR_COMMAND, "Failed to send UID FETCH command");
             return false;
         }
+
+        $result = [];
 
         do {
             $line = $this->readLine(1024);
@@ -3204,7 +3205,7 @@ class rcube_imap_generic
 
         foreach (explode("\n", $response) as $line) {
             $tokens     = $this->tokenizeResponse($line, 3);
-            $quota_root = isset($tokens[2]) ? $tokens[2] : null;
+            $quota_root = $tokens[2] ?? null;
             $quotas     = $this->tokenizeResponse($line, 1);
 
             if (empty($quotas)) {
@@ -3918,7 +3919,7 @@ class rcube_imap_generic
             }
         }
 
-        return $num == 1 ? (isset($result[0]) ? $result[0] : '') : $result;
+        return $num == 1 ? ($result[0] ?? '') : $result;
     }
 
     /**
