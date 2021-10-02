@@ -1,7 +1,5 @@
 <?php
 
-namespace bjc\roundcubeimap;
-
 /**
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
