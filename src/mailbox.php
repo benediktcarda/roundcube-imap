@@ -29,7 +29,14 @@ class mailbox {
         
         $result = $this->rcube_imap_generic->status($this->mailboxname, array('UIDNEXT', 'UIDVALIDITY', 'RECENT'));
         
-        file_put_contents("/tmp/test.txt", "\nGET STATUS: \n" . print_r($result, true), FILE_APPEND);
+        $obj = new \stdClass();
+        
+        foreach ($result as $key => $item) {
+            $key_to_lower = strtolower($key);
+            $obj->$key = $item;
+        }
+        
+        return $obj;
         
     }
     
