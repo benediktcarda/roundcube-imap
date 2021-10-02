@@ -17,11 +17,11 @@ class mailbox {
         return $this->mailboxname;
     }
 
-    public function getMessages($message_set) {
+    public function getMessageSequence($message_set) {
     
         $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true);
         
-        file_put_contents("/tmp/test.txt", "\nGET MESSAGES: \n" . print_r($result, true), FILE_APPEND);
+        return $result;
         
     }
     
@@ -37,14 +37,6 @@ class mailbox {
         }
         
         return $obj;
-        
-    }
-    
-    public function getData() {
-        
-        $result = $this->rcube_imap_generic->data;
-
-        return $result;
         
     }
     
