@@ -13,7 +13,7 @@ class server {
         $this->host = $host;
         $this->ssl_mode = $ssl_mode;
         
-        require_once 'lib/Roundcube/bootstrap.php';
+        require_once '../lib/Roundcube/bootstrap.php';
         
     }
     
