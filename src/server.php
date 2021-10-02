@@ -13,13 +13,15 @@ class server {
         $this->host = $host;
         $this->ssl_mode = $ssl_mode;
         
+        require_once '/lib/Roundcube/bootstrap.php';
+        
     }
     
     // Function authenticate returns instance of \bjc\roundcubeimap\connection
     
     public function authenticate($username, $password) {
 
-        $rcube_imap_generic = new \bjc\rcube\rcube_imap_generic();
+        $rcube_imap_generic = new rcube_imap_generic();
         
         $result_connect = $rcube_imap_generic->connect($this->host, $username, $password, array('ssl_mode' => $this->ssl_mode));
         
