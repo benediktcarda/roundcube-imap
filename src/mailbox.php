@@ -21,17 +21,17 @@ class mailbox {
     
         $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, ['message-id']);
         
-  /*      $resultarray = array();
+        $resultarray = array();
         
-        foreach ($result as $row) {
+        foreach ($result as $rcube_message_header) {
             
-            $obj = new \stdClass();
+            $message = new \bjc\roundcubemail\message($this->rcube_imap_generic, $rcube_message_header);
             
-            
+            $resultarray[] = $message;
             
         }
-   */     
-        return $result;
+        
+        return $resultarray;
         
     }
     
