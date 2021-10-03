@@ -48,17 +48,67 @@ class message {
         $input = $this->rcube_message_header->get('from');
         
         $returnarray = \rcube_mime::decode_address_list($input);
-        $name = $returnarray[0]["name"];
-        $address = $returnarray[0]["mailto"];
-        
-        file_put_contents("/tmp/test.txt", "Raw: $input\nArray: " . print_r($returnarray, true) . "\n\n", FILE_APPEND);
+        $name = $returnarray[1]["name"];
+        $address = $returnarray[1]["mailto"];
         
         $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name); 
+        
+        return $emailaddress;
+        
+    }
+    
+    public function getTo() {
+        
+        $input = $this->rcube_message_header->get('to');
+        
+        $addressarray = \rcube_mime::decode_address_list($input);
+   
+        $returnarray = array();
+        
+        foreach ($returnarray as $key => $item) {
+            $name = $item["name"];
+            $address = $item["mailto"];
+        
+            $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name);
+            
+            $returnarray[] = $emailaddress;
+            
+        }
         
         return $returnarray;
         
     }
     
+    public function getCC() {
+        
+        $input = $this->rcube_message_header->get('cc');
+        
+        $addressarray = \rcube_mime::decode_address_list($input);
+        
+        $returnarray = array();
+        
+        foreach ($returnarray as $key => $item) {
+            $name = $item["name"];
+            $address = $item["mailto"];
+            
+            $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name);
+            
+            $returnarray[] = $emailaddress;
+            
+        }
+        
+        return $returnarray;
+        
+    }
+    
+    
+    public function isAnswered() {
+        
+        $flags = $this->rcube_message_header->flags;
+        
+        return $flags;
+        
+    }
     
     
     public function getHeader($field) {
