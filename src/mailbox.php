@@ -19,7 +19,7 @@ class mailbox {
 
     public function getMessageSequence($message_set) {
     
-        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, ['message-id']);
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, ['message-id', 'uid']);
         
         $resultarray = array();
         
