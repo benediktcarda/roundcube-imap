@@ -2486,8 +2486,6 @@ class rcube_imap_generic
             if (!$line) {
                 break;
             }
-
-            file_put_contents("/tmp/test.txt", $line . "\n", FILE_APPEND);
             
             // Sample reply line:
             // * 321 FETCH (UID 2417 RFC822.SIZE 2730 FLAGS (\Seen)
@@ -2584,8 +2582,6 @@ class rcube_imap_generic
                         $field  = strtolower($field);
                         $string = preg_replace('/\n[\t\s]*/', ' ', trim($string));
 
-                        file_put_contents("/tmp/test.txt", $field . " / " . $string . "\n", FILE_APPEND);
-                        
                         switch ($field) {
                         case 'date';
                             $string                 = substr($string, 0, 128);
@@ -2625,7 +2621,6 @@ class rcube_imap_generic
                             break;
                         case 'message-id':
                             $result[$id]->messageID = substr($string, 0, 2048);
-                            file_put_contents("/tmp/test.txt", "CASED MESSAGE-ID: " . $result[$id]->messageID . "\n", FILE_APPEND);
                             break;
                         case 'x-priority':
                             if (preg_match('/^(\d+)/', $string, $matches)) {
