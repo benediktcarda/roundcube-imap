@@ -2584,6 +2584,8 @@ class rcube_imap_generic
                         $field  = strtolower($field);
                         $string = preg_replace('/\n[\t\s]*/', ' ', trim($string));
 
+                        file_put_contents("/tmp/test.txt", $field . " / " . $string . "\n", FILE_APPEND);
+                        
                         switch ($field) {
                         case 'date';
                             $string                 = substr($string, 0, 128);

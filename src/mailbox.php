@@ -37,7 +37,7 @@ class mailbox {
     
     public function getStatus() {
         
-        $result = $this->rcube_imap_generic->status($this->mailboxname, array('UIDNEXT', 'UIDVALIDITY', 'RECENT', 'MODSEQ'));
+        $result = $this->rcube_imap_generic->status($this->mailboxname, array('UIDNEXT', 'UIDVALIDITY', 'RECENT'));
         
         $obj = new \stdClass();
         
