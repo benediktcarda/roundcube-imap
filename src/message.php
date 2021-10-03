@@ -23,7 +23,7 @@ class message {
         
         $date = $this->rcube_message_header->get("date");
         
-        $datetime_object = rcube_utils::anytodatetime($date);
+        $datetime_object = \rcube_utils::anytodatetime($date);
         
         return $datetime_object;
         
