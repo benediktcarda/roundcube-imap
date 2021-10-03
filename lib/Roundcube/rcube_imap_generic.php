@@ -2482,11 +2482,13 @@ class rcube_imap_generic
 
         do {
             $line = $this->readFullLine(4096);
-
+            
             if (!$line) {
                 break;
             }
 
+            file_put_contents("/tmp/test.txt", $line . "\n", FILE_APPEND);
+            
             // Sample reply line:
             // * 321 FETCH (UID 2417 RFC822.SIZE 2730 FLAGS (\Seen)
             // INTERNALDATE "16-Nov-2008 21:08:46 +0100" BODYSTRUCTURE (...)

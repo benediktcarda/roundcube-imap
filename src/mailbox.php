@@ -19,9 +19,9 @@ class mailbox {
 
     public function getMessageSequence($message_set) {
     
-        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, ['MODSEQ', 'message-id']);
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, ['message-id']);
         
-/*        $resultarray = array();
+  /*      $resultarray = array();
         
         foreach ($result as $row) {
             
@@ -30,14 +30,14 @@ class mailbox {
             
             
         }
-*/        
+   */     
         return $result;
         
     }
     
     public function getStatus() {
         
-        $result = $this->rcube_imap_generic->status($this->mailboxname, array('UIDNEXT', 'UIDVALIDITY', 'RECENT'));
+        $result = $this->rcube_imap_generic->status($this->mailboxname, array('UIDNEXT', 'UIDVALIDITY', 'RECENT', 'MODSEQ'));
         
         $obj = new \stdClass();
         
