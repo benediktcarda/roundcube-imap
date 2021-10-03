@@ -19,6 +19,12 @@ class message {
         return $returnvalue;
     }
     
+    public function getID() {
+        $returnvalue = $this->rcube_message_header->get('message-id');
+        
+        return $returnvalue;
+    }
+    
     public function getDate() {
         
         $date = $this->rcube_message_header->get("date");
@@ -28,6 +34,28 @@ class message {
         return $datetime_object;
         
     }
+
+    public function getSubject() {
+        
+        $returnvalue = $this->rcube_message_header->get('subject');
+     
+        return $returnvalue;
+        
+    }
+
+    public function getFrom() {
+        
+        $input = $this->rcube_message_header->get('from');
+        
+        $returnarray = \rcube_mime::decode_address_list($input);
+        
+        $emailaddress = new \bjc\roundcubeimap\emailaddress($returnarray); 
+        
+        return $returnarray;
+        
+    }
+    
+    
     
     public function getHeader($field) {
         
