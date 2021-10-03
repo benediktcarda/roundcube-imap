@@ -48,8 +48,10 @@ class message {
         $input = $this->rcube_message_header->get('from');
         
         $returnarray = \rcube_mime::decode_address_list($input);
+        $name = $returnarray[0]["name"];
+        $address = $returnarray[0]["mailto"];
         
-        $emailaddress = new \bjc\roundcubeimap\emailaddress($returnarray); 
+        $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name); 
         
         return $returnarray;
         
