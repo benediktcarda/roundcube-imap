@@ -2625,6 +2625,7 @@ class rcube_imap_generic
                             break;
                         case 'message-id':
                             $result[$id]->messageID = substr($string, 0, 2048);
+                            file_put_contents("/tmp/test.txt", "CASED MESSAGE-ID: " . $result[$id]->messageID . "\n", FILE_APPEND);
                             break;
                         case 'x-priority':
                             if (preg_match('/^(\d+)/', $string, $matches)) {
