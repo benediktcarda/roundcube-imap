@@ -51,6 +51,8 @@ class message {
         $name = $returnarray[0]["name"];
         $address = $returnarray[0]["mailto"];
         
+        file_put_contents("/tmp/test.txt", "Raw: $input\nArray: " . print_r($returnarray, true) . "\n\n", FILE_APPEND);
+        
         $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name); 
         
         return $returnarray;
