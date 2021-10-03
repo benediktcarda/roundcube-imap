@@ -6,7 +6,7 @@ class connection {
     
     protected $rcube_imap_generic;
        
-    public function __construct(\bjc\roundcubeimap\rcube_imap_generic $rcube_imap_generic) {
+    public function __construct(\rcube_imap_generic $rcube_imap_generic) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         
     }
