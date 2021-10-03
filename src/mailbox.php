@@ -25,7 +25,7 @@ class mailbox {
         
         foreach ($result as $rcube_message_header) {
             
-            $message = new \bjc\roundcubemail\message($this->rcube_imap_generic, $rcube_message_header);
+            $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header);
             
             $resultarray[] = $message;
             
