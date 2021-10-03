@@ -12,8 +12,25 @@ class message {
         $this->rcube_message_header = $rcube_message_header;
         
     }
+
+    public function getUID() {
+        $returnvalue = $this->rcube_message_header->uid;
+        
+        return $returnvalue;
+    }
     
-    public function get($field) {
+    public function getDate() {
+        
+        $date = $this->rcube_message_header->get("date");
+        
+        $datetime_object = rcube_utils::anytodatetime($date);
+        
+        return $datetime_object;
+        
+    }
+    
+    public function getHeader($field) {
+        
         $returnvalue = $this->rcube_message_header->get($field);
 
         if (is_array($returnvalue)) {
