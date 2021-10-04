@@ -6,10 +6,13 @@ class message {
     
     protected $rcube_imap_generic;
     protected $rcube_message_header;
+    protected $messageheaders;
        
     public function __construct(\rcube_imap_generic $rcube_imap_generic, \rcube_message_header $rcube_message_header) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->rcube_message_header = $rcube_message_header;
+        
+        $this->messageheaders = new \bjc\roundcubeimap\messageheaders($rcube_message_header);
         
     }
 
@@ -27,78 +30,40 @@ class message {
     
     public function getDate() {
         
-        $date = $this->rcube_message_header->get("date");
+        $returnvalue = $this->messageheaders->get('date');
         
-        $datetime_object = \rcube_utils::anytodatetime($date);
+        return $returnvalue;
+    }
+    
+    public function getTimestamp() {
         
-        return $datetime_object;
-        
+        $timestamp = $this->rcube_message_header->get("timestamp");
+
+        return $timestamp;
     }
 
     public function getSubject() {
-        
-        $returnvalue = $this->rcube_message_header->get('subject');
-     
+        $returnvalue = $this->messageheaders->get("subject");
+
         return $returnvalue;
-        
     }
 
     public function getFrom() {
+        $returnvalue = $this->messageheaders->get('from');
         
-        $input = $this->rcube_message_header->get('from');
-        
-        $returnarray = \rcube_mime::decode_address_list($input);
-        $name = $returnarray[1]["name"];
-        $address = $returnarray[1]["mailto"];
-        
-        $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name); 
-        
-        return $emailaddress;
-        
+        return $returnvalue;        
     }
     
     public function getTo() {
+        $returnvalue = $this->messageheaders->get('to');
         
-        $input = $this->rcube_message_header->get('to');
-        
-        $addressarray = \rcube_mime::decode_address_list($input);
-   
-        $returnarray = array();
-        
-        foreach ($returnarray as $key => $item) {
-            $name = $item["name"];
-            $address = $item["mailto"];
-        
-            $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name);
-            
-            $returnarray[] = $emailaddress;
-            
-        }
-        
-        return $returnarray;
-        
+        return $returnvalue;        
     }
     
     public function getCC() {
+        $returnvalue = $this->messageheaders->get('cc');
         
-        $input = $this->rcube_message_header->get('cc');
-        
-        $addressarray = \rcube_mime::decode_address_list($input);
-        
-        $returnarray = array();
-        
-        foreach ($returnarray as $key => $item) {
-            $name = $item["name"];
-            $address = $item["mailto"];
-            
-            $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name);
-            
-            $returnarray[] = $emailaddress;
-            
-        }
-        
-        return $returnarray;
-        
+        return $returnvalue;
     }
     
     
@@ -106,10 +71,61 @@ class message {
         
         $flags = $this->rcube_message_header->flags;
         
-        return $flags;
+        if (isset($flags["ANSWERED"])) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+
+    public function isDeleted() {
+        
+        $flags = $this->rcube_message_header->flags;
+        
+        if (isset($flags["DELETED"])) {
+            return true;
+        } else {
+            return false;
+        }
         
     }
     
+    public function isDraft() {
+        
+        $flags = $this->rcube_message_header->flags;
+        
+        if (isset($flags["DRAFT"])) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+    
+    public function isSeen() {
+        
+        $flags = $this->rcube_message_header->flags;
+        
+        if (isset($flags["SEEN"])) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+    
+    public function isFlagged() {
+        
+        $flags = $this->rcube_message_header->flags;
+        
+        if (isset($flags["FLAGGED"])) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
     
     public function getHeader($field) {
         
