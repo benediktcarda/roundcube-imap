@@ -24,9 +24,9 @@ class utils {
         
     }
     
-    static public function decodeAddress($address) {
+    static public function decodeAddress($addressinput) {
         
-        $addressarray = \rcube_mime::decode_address_list($addresslist);
+        $addressarray = \rcube_mime::decode_address_list($addressinput);
         
         $returnarray = array();
         
