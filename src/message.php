@@ -141,7 +141,7 @@ class message {
     
     public function getHeaders() {
         
-        
+        return $this->messageheaders->getAll();
         
     }
         
