@@ -28,11 +28,11 @@ class messageheaders {
         } elseif ($headername == 'date') {
             $value = $this->rcube_message_header->get($headername);
             
-            $returnvalue = \rcube_utils::anytodatetime($date);
+            $returnvalue = \rcube_utils::anytodatetime($value);
             
         } else {
             
-            $returnvalue = $this->rcube_message_header->get($item);
+            $returnvalue = $this->rcube_message_header->get($headername);
                             
         }
         
