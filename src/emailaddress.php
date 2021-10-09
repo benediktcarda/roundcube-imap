@@ -8,10 +8,10 @@ namespace bjc\roundcubeimap;
 
 class EmailAddress {
     
-    private string $mailbox;
-    private ?string $hostname;
-    private ?string $name;
-    private ?string $address;
+    private $mailbox;
+    private $hostname;
+    private $name;
+    private $address;
     
     public function __construct(string $address = null, string $mailbox = null, string $hostname = null, string $name = null) {
         

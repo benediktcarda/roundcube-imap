@@ -22,7 +22,7 @@ class messageheaders {
 
         } elseif ($headername == 'from') {
             $value = $this->rcube_message_header->get($headername);
-
+            
             $returnvalue = \bjc\roundcubeimap\utils::decodeAddress($value);
 
         } elseif ($headername == 'date') {
