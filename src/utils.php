@@ -14,6 +14,8 @@ class utils {
             $name = $address_item["name"];
             $address = $address_item["mailto"];
             
+            file_put_contents("/tmp/test.txt", "address: $address, name: $name\n", FILE_APPEND);
+            
             $emailaddress = new \bjc\roundcubeimap\emailaddress($address, null, null, $name);
             
             $returnarray[] = $emailaddress;
