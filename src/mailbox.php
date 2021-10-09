@@ -96,7 +96,7 @@ class mailbox {
             
             $message_set = "1" . ":*";
             
-            $result = fetch($this->mailboxname, $message_set, true, $query_items, $stored_highestmodseq, true);
+            $result = $this->rcube_imap_generic->fetch($this->mailboxname, $message_set, true, $query_items, $stored_highestmodseq, true);
             
             $messagearray = array();
             
