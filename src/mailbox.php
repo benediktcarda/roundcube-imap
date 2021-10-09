@@ -63,7 +63,7 @@ class mailbox {
             $returnarray["statusmessage"] = 'Mailbox does not support synchronization';
             $returnarray["status"] = 0;
             
-        } elseif ($uidvalidity != $stored_uidvalidity) {
+        } elseif ($uidvalidity <> $stored_uidvalidity) {
             
             $returnarray["statusmessage"] = 'UID validity changed, cannot synchronize';
             $returnarray["status"] = 0;
