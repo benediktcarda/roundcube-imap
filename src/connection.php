@@ -40,6 +40,8 @@ class connection {
     
     public function test($capabilities_array) {
         
+        $return = "";
+        
         foreach ($capabilities_array as $capability) {
             $result = $this->rcube_imap_generic->getCapability($capability);
             
@@ -49,9 +51,9 @@ class connection {
                 $return .= "<div>$capability: FALSE</div>";
             }
             
-            return $return;
-            
         }
+        
+        return $return;
         
     }
     
