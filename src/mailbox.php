@@ -116,7 +116,7 @@ class mailbox {
         
         if ($this->qresync == true && $this->condstore == true) {
             $requestarray[] = 'HIGHESTMODSEQ';
-            $requestarray[] = 'NOMODSEQ';
+            // $requestarray[] = 'NOMODSEQ';
         }
         
         $result = $this->rcube_imap_generic->status($this->mailboxname, $requestarray);
