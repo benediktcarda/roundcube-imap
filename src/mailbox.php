@@ -18,7 +18,7 @@ class mailbox {
         $this->condstore = $this->qresync ? true : $this->rcube_imap_generic->getCapability('CONDSTORE');
         $res_enable = $this->rcube_imap_generic->enable($this->qresync ? 'QRESYNC' : 'CONDSTORE');
         
-        file_put_contents("/tmp/test.txt", "$mailboxname: $this->qresync, $this->condstore - res_enable: $res_enable\n", FILE_APPEND);
+        file_put_contents("/tmp/test.txt", "$mailboxname: $this->qresync, $this->condstore - res_enable:" . print_r($res_enable, true) . "\n", FILE_APPEND);
         
         
     }
