@@ -53,8 +53,12 @@ class mailbox {
         $qresyn_enable_failed = $this->connection_data["qresync_enable_failed"];
         
         $status_object = $this->getStatus;
-        $uidvalidity = $status_object->uidvalidity;
-        $highestmodseq = $status_object->highestmodseq;
+        
+        $uidvalidity = (int) $status_object->uidvalidity;
+        $highestmodseq = (int) $status_object->highestmodseq;
+        
+        $stored_highestmodseq = (int) $stored_highestmodseq;
+        $stored_uidvalidity = (int) $stored_uidvalidity;
         
         $returnarray = array();
         
