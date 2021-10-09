@@ -14,8 +14,8 @@ class mailbox {
         $this->mailboxname = $mailboxname;
         
         $this->rcube_imap_generic->select($mailboxname);
-        $this->qresync   = $this->rcube_imap_generic->get_capability('QRESYNC');
-        $this->condstore = $this->qresync ? true : $this->rcube_imap_generic->get_capability('CONDSTORE');
+        $this->qresync   = $this->rcube_imap_generic->getCapability('QRESYNC');
+        $this->condstore = $this->qresync ? true : $this->rcube_imap_generic->getCapability('CONDSTORE');
         $res_enable = $this->rcube_imap_generic->enable($this->qresync ? 'QRESYNC' : 'CONDSTORE');
         
         file_put_contents("/tmp/test.txt", "$mailboxname: $this->qresync, $this->condstore - res_enable: $res_enable\n", FILE_APPEND);
