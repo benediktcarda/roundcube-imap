@@ -6,20 +6,12 @@ class mailbox {
     
     protected $rcube_imap_generic;
     protected $mailboxname;
-    protected $qresync = false;
-    protected $condstore = false;
+    protected $connection_data;
        
-    public function __construct($mailboxname, \rcube_imap_generic $rcube_imap_generic) {
+    public function __construct($mailboxname, \rcube_imap_generic $rcube_imap_generic, $connection_data) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->mailboxname = $mailboxname;
-        
-        $this->rcube_imap_generic->select($mailboxname);
-        $this->qresync   = $this->rcube_imap_generic->getCapability('QRESYNC');
-        $this->condstore = $this->qresync ? true : $this->rcube_imap_generic->getCapability('CONDSTORE');
-        $res_enable = $this->rcube_imap_generic->enable($this->qresync ? 'QRESYNC' : 'CONDSTORE');
-        
-        file_put_contents("/tmp/test.txt", "$mailboxname: $this->qresync, $this->condstore - res_enable:" . print_r($res_enable, true) . "\n", FILE_APPEND);
-        
+        $this->connection_data = $connection_data;
         
     }
     
@@ -27,7 +19,7 @@ class mailbox {
         return $this->mailboxname;
     }
 
-    public function getMessagehigherthan($lastfetcheduid) {
+    public function getMessageshigherthan($lastfetcheduid) {
         
         $nextuid = $lastfetcheduid + 1;
         $messages = $this->getMessageSequence("$nextuid" . ":*");
@@ -56,10 +48,13 @@ class mailbox {
     
     public function synchronize($stored_highestmodseq, $stored_uidvalidity) {
         
-        $qresync   = $this->rcube_imap_generic->get_capability('QRESYNC');
-        $condstore = $qresync ? true : $this->rcube_imap_generic->get_capability('CONDSTORE');
+        $qresync   = $this->connection_data["capabilities"]["qresync"];
+        $condstore = $this->connection_data["capabilities"]["condstore"];
+        $qresyn_enable_failed = $this->connection_data["qresync_enable_failed"];
         
-        $uidvalidity = $this->getStatus->uidvalidity;
+        $status_object = $this->getStatus;
+        $uidvalidity = $status_object->uidvalidity;
+        $highestmodseq = $status_object->highestmodseq;
         
         $returnarray = array();
         
@@ -78,34 +73,41 @@ class mailbox {
             $returnarray["statusmessage"] = 'No stored highestmodseq, cannot synchronize';
             $returnarray["status"] = 0;
             
-        } else {
-
-            // Enable Qresync
-            $enable_result = $this->rcube_imap_generic->enable($qresync ? 'QRESYNC' : 'CONDSTORE');
+        } elseif (empty($highestmodseq)) {
             
-            if ($enable_result === false) {
-                
-                $returnarray["statusmessage"] = 'Could not enable QRESYNC in connection to mailbox';
-                $returnarray["status"] = 0;
-                
-            } else {
+            $returnarray["statusmessage"] = 'QRESYNC not supported on specified mailbox';
+            $returnarray["status"] = 0;
+            
+        } elseif (!empty($qresyn_enable_failed)) {
 
-                // Close mailbox if already selected to get most recent data                
-                if ($this->rcube_imap_generic->selected == $this->mailboxname) {
-                    $this->rcube_imap_generic->close();
-                }
+            $returnarray["statusmessage"] = 'Failed to enable QRESYNC on this connection';
+            $returnarray["status"] = 0;            
+               
+        } else {
+                                      
+            $query_items = ['UID', 'RFC822.SIZE', 'FLAGS', 'INTERNALDATE'];
+            $headers     = ['DATE', 'FROM', 'TO', 'SUBJECT', 'CONTENT-TYPE', 'CC', 'REPLY-TO', 'LIST-POST', 'DISPOSITION-NOTIFICATION-TO', 'X-PRIORITY', 'MESSAGE-ID', 'UID', 'REFERENCES'];
                 
-                $this->rcube_imap_generic->select($this->mailboxname);
+            $query_items[] = 'BODY.PEEK[HEADER.FIELDS (' . implode(' ', $headers) . ')]';
+            
+            $message_set = "1" . ":*";
+            
+            $result = fetch($this->mailboxname, $message_set, true, $query_items, $stored_highestmodseq, true);
+
+            $resultarray = array();
+            
+            foreach ($result as $rcube_message_header) {
                 
-                $returnarray = $this->rcube_imap_generic->data;
+                $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header);
+                
+                $resultarray[] = $message;
                 
             }
             
-            $uids    = [];
-            $removed = [];
-            
+            return $resultarray;
             
         }
+                
         
         return $returnarray;
     }
@@ -114,9 +116,8 @@ class mailbox {
         
         $requestarray = array('UIDNEXT', 'UIDVALIDITY', 'RECENT');
         
-        if ($this->qresync == true && $this->condstore == true) {
+        if ($this->capabilities["qresync"] == true && $this->capabilities["condstore"] == true) {
             $requestarray[] = 'HIGHESTMODSEQ';
-            // $requestarray[] = 'NOMODSEQ';
         }
         
         $result = $this->rcube_imap_generic->status($this->mailboxname, $requestarray);
@@ -146,14 +147,6 @@ class mailbox {
             $this->rcube_imap_generic->flag($this->mailboxname, $messageUIDs, $flag);
         }
 
-    }
-
-    public function getData() {
-        
-        $data = $this->rcube_imap_generic->data;
-        
-        return $data;
-        
     }
     
 }
