@@ -52,7 +52,7 @@ class mailbox {
         $condstore = $this->connection_data["capabilities"]["condstore"];
         $qresyn_enable_failed = $this->connection_data["qresync_enable_failed"];
         
-        $status_object = $this->getStatus;
+        $status_object = $this->getStatus();
         
         $uidvalidity = (int) $status_object->uidvalidity;
         $highestmodseq = (int) $status_object->highestmodseq;
