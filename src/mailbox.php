@@ -116,7 +116,7 @@ class mailbox {
         
         $requestarray = array('UIDNEXT', 'UIDVALIDITY', 'RECENT');
         
-        if ($this->capabilities["qresync"] == true && $this->capabilities["condstore"] == true) {
+        if ($this->connection_data["capabilities"]["qresync"] == true && $this->connection_data["capabilities"]["condstore"] == true) {
             $requestarray[] = 'HIGHESTMODSEQ';
         }
         
