@@ -93,21 +93,21 @@ class mailbox {
             $message_set = "1" . ":*";
             
             $result = fetch($this->mailboxname, $message_set, true, $query_items, $stored_highestmodseq, true);
-
-            $resultarray = array();
+            
+            $messagearray = array();
             
             foreach ($result as $rcube_message_header) {
                 
                 $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header);
                 
-                $resultarray[] = $message;
+                $messagearray[] = $message;
                 
             }
-            
-            return $resultarray;
+
+            $returnarray["messagearray"] = $messagearray;
+            $returnarray["status"] = 1;
             
         }
-                
         
         return $returnarray;
     }
