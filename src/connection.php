@@ -37,4 +37,22 @@ class connection {
         $this->rcube_imap_generic->deleteFolder($mailboxname);
     }
     
+    
+    public function test($capabilities_array) {
+        
+        foreach ($capabilities_array as $capability) {
+            $result = $this->rcube_imap_generic->getCapability($capability);
+            
+            if ($result == true) {
+                $return .= "<div>$capability: TRUE</div>";
+            } else {
+                $return .= "<div>$capability: FALSE</div>";
+            }
+            
+            return $return;
+            
+        }
+        
+    }
+    
 }
