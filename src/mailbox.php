@@ -6,12 +6,17 @@ class mailbox {
     
     protected $rcube_imap_generic;
     protected $mailboxname;
+    protected $qresync = false;
+    protected $condstore = false;
        
     public function __construct($mailboxname, \rcube_imap_generic $rcube_imap_generic) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->mailboxname = $mailboxname;
         
         $this->rcube_imap_generic->select($mailboxname);
+        $this->qresync   = $this->rcube_imap_generic->get_capability('QRESYNC');
+        $this->condstore = $this->qresync ? true : $this->rcube_imap_generic->get_capability('CONDSTORE');
+        $this->imap->conn->enable($this->qresync ? 'QRESYNC' : 'CONDSTORE');
         
     }
     
@@ -104,7 +109,14 @@ class mailbox {
     
     public function getStatus() {
         
-        $result = $this->rcube_imap_generic->status($this->mailboxname, array('UIDNEXT', 'UIDVALIDITY', 'RECENT'));
+        $requestarray = array('UIDNEXT', 'UIDVALIDITY', 'RECENT');
+        
+        if ($this->qresync == true && $this->condstore == true) {
+            $requestarray[] = 'HIGHESTMODSEQ';
+            $requestarray[] = 'NOMODSEQ';
+        }
+        
+        $result = $this->rcube_imap_generic->status($this->mailboxname, $requestarray);
         
         $obj = new \stdClass();
         
