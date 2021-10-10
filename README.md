@@ -109,6 +109,12 @@ foreach ($messagearray as $message) {
 
 ```
 
+#### If you know the UID of the message you want to retrieve
+
+```php
+$message = $mailbox->getMessage($uid);
+// $message is an object of \bjc\roundcubeimap\message
+```
 
 #### If your server supports CONDSTORE and QRESYNC extension then you can synchronize your data
 
@@ -118,13 +124,98 @@ Highestmodsequence
 
 Highestmodsequence is a numeric value that increases each time something changed in the mailbox. The IMAP server keeps track of which changes happened at which modsequence and therefore can tell which changes it needs to tell you when you ask for changes since a certain modsequence.
 
+To get the current highestmodseq for a mailbox (in order to store it in your application until your next fetch) run:
 
+```php
+$status = $mailbox->getStatus();
+$highestmodseq = $status->highestmodseq;
+```
+
+To get the changes since last synchronization run:
+
+```php
+$synchronize_result = $mailbox->synchronize($stored_highestmodseq, $stored_uidvalidity);
+
+// check if status == 1 (query worked), if status == 0 check statusmessage to see what went wrong:
+$status = $synchronize_result["status"];
+$statusmessage = $synchronize_result["statusmesage"];
+
+// Get array of messages
+$messagearray = $synchronize_result["messagearray"];
+
+foreach ($messagearray as $message) {
+  // $message is an object of \bjc\roundcubeimap\message
+}
+
+// get array of vanished (deleted) messages
+$vanishedarray = $synchronize_result["vanishedarray"];
+
+foreach ($vanishedarray as $uid) {
+  // uid is the uid of the deleted message
+}
+
+```
 
 
 #### If your server does not support CONDSTORE and QRESYNC
 
-If your server does not support CONDSTORE and QRESYNC then you have to fetch at least the flags and UIDs of all messages in the mailbox (from time to time or always) to keep track of flag changes and deleted messages
+If your server does not support CONDSTORE and QRESYNC then you have to fetch at least the flags and UIDs of all messages in the mailbox (from time to time or always) to keep track of flag changes and deleted messages.
+--> I will add this option to existing functions soon.
 
 
+### Messageheaders
+
+To retrieve headers from the message object, you have the following options:
+
+```php
+// message identificatoin
+$uid = $message->getUID(); // UID of message
+$id = $message->getID(); // globally unique alphanumeric message ID
+
+// Date and subject
+$date = $message->getDate); // A datetime object
+$timestamp = $message->getTimestamp(); // The timestamp of the date
+$subject = $message->getSubject(); // string
+
+// Addresses
+$from = $message->getFrom(); // $from is an object of \bjc\roundcubeimap\emailaddress
+$to = $message->getTo(); // $to is an array of objects of \bjc\roundcubeimap\emailaddress
+$cc = $message->getCC(); // $cc is an array of objects of \bjc\roundcubeimap\emailaddress
+
+// Flags
+$isAnswered = $message->isAnswered; // true if ANSWERED flag is set, otherwise false
+$isDeleted = $message->isDeleted; // true if DELETED flag is set, otherwise false
+$isDraft = $message->isDraft; // true if DRAFT flag is set, otherwise false
+$isSeen = $message->isAnswered; // true if SEEN flag is set, otherwise false
+$isFlagged = $message->isFlagged; // true if FLAGGED flag is set, otherwise false
+
+// get a specific header
+$value = $message->getheader($headername);
+
+// get all headers
+$headerarray = $message->getHeaders();
+
+```
+
+#### Email address object
+
+For the emailaddress object you can do the following:
+
+```php
+// example: Guybrush Threepwood <guy@mightypirates.com>
+$address = $from->getAddress(); // guy@mightypirates.com
+$mailbox = $from->getMailbox(); // guy
+$hostname = $from->getHostname(); // mightypirates.com
+$name = $from->getName(); // Guybrush Threepwood
+
+$fulladdress = $from->getFulladdress; // Guybrush Threepwood <guy@mightypirates.com>
+```
 
 
+## To Do (will be continued after 20th of October 2021)
+
+* Add possibility to fetch only UIDs and flags (in case condstore and qresync are not availabel)
+* Add possibility to customize which headers should be fetched and stored in the message object
+* Add retrieval of bodystructure and attachments
+* Add choice whether retrieve bodystructure and attachments at time of fetching headers or only if body is requested from the message object
+* Add possibility to add messages to folders
