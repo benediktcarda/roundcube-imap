@@ -42,5 +42,33 @@ class utils {
         
     }
     
+    static public function decodeMessageRanges($rangestring) {
+        
+        $uidarray = array();
+        
+        $rangearray = explode(",", $rangestring);
+        
+        foreach ($rangearray as $rangeitem) {
+            if (is_int($rangeitem)) {
+                $uidarray[] = $rangeitem;
+            } else {
+                $rangestartandend = explode(':', $rangeitem);
+                $rangestart = $rangestartandend[0];
+                $rangeend = $rangestartandend[1];
+                
+                $i = $rangestart;
+                
+                while ($i <= $rangeend) {
+                    $uidarray[] = $i;
+                    
+                    $i++;
+                }
+                
+            }
+            
+        }
+        
+        return $uidarray;
+    }
     
 }

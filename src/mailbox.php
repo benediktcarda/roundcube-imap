@@ -46,6 +46,16 @@ class mailbox {
         
     }
     
+    public function getMessage($uid) {
+        
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $uid, true, false, ['message-id', 'uid', 'references']);
+        
+        $message = reset($result);
+        
+        return $message;
+        
+    }
+    
     public function synchronize($stored_highestmodseq, $stored_uidvalidity) {
         
         $qresync   = $this->connection_data["capabilities"]["qresync"];
@@ -109,7 +119,8 @@ class mailbox {
             }
 
             $returnarray["messagearray"] = $messagearray;
-            $returnarray["vanishedarray"] = $this->rcube_imap_generic->data["VANISHED"];
+            $returnarray["vanishedarray"] = \bjc\roundcubeimap\utils::decodeMessageRanges($this->rcube_imap_generic->data["VANISHED"]);
+            $returnarray["vanishedrange"] = $this->rcube_imap_generic->data["VANISHED"];
             $returnarray["status"] = 1;
             
         }
