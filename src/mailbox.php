@@ -109,6 +109,7 @@ class mailbox {
             }
 
             $returnarray["messagearray"] = $messagearray;
+            $returnarray["vanishedarray"] = $this->rcube_imap_generic->data["VANISHED"];
             $returnarray["status"] = 1;
             
         }
