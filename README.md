@@ -95,6 +95,11 @@ foreach ($messagearray as $message) {
 
 ```
 
+Note that the above command will fetch a standard set of headers of the selected messages. You can add additional headers you would like to fetch by adding an array of strings as a second variable to the function call:
+```php
+$messagearray = $mailbox->getMessageshigherthan($lastfetcheduid, ['X-Spam-Status','X-Mailer']);
+```
+
 #### Get messages of a certain message set (e.g. if you want to fetch all messages again because uidvalidity changed)
 
 ```php
@@ -109,12 +114,35 @@ foreach ($messagearray as $message) {
 
 ```
 
+Note that the above command will fetch a standard set of headers of the selected messages. You can add additional headers you would like to fetch by adding an array of strings as a second variable to the function call:
+```php
+$messagearray = $mailbox->getMessageSequence($message_set, ['X-Spam-Status','X-Mailer']);
+```
+
 #### If you know the UID of the message you want to retrieve
 
 ```php
 $message = $mailbox->getMessage($uid);
 // $message is an object of \bjc\roundcubeimap\message
 ```
+
+Note that the above command will fetch a standard set of headers of the selected message. You can add additional headers you would like to fetch by adding an array of strings as a second variable to the function call:
+```php
+$message = $mailbox->getMessage($uid, ['X-Spam-Status','X-Mailer']);
+```
+
+### Checking whether your server is capable of synchronization (i.e. has CONDSTORE and QRESYNC extension implemented)
+
+Synchronization will help you to keep your applications data up to date with what is going on on the IMAP server. First you have to check if your server supports it:
+
+```php
+$condstore = $mailbox->checkCondstore();
+// true if condstore is available, false if not
+
+$qresync = $mailbox->checkQresyn();
+// true if qresync is available, false if not
+```
+
 
 #### If your server supports CONDSTORE and QRESYNC extension then you can synchronize your data
 
@@ -156,11 +184,45 @@ foreach ($vanishedarray as $uid) {
 
 ```
 
+Note that the above command will fetch a standard set of headers of the selected message. You can add additional headers you would like to fetch by adding an array of strings as a third variable to the function call:
+```php
+$synchronize_result = $mailbox->synchronize($stored_highestmodseq, $stored_uidvalidity, ['X-Spam-Status','X-Mailer']);
+```
+
 
 #### If your server does not support CONDSTORE and QRESYNC
 
 If your server does not support CONDSTORE and QRESYNC then you have to fetch at least the flags and UIDs of all messages in the mailbox (from time to time or always) to keep track of flag changes and deleted messages.
---> I will add this option to existing functions soon.
+To keep traffic as low as possible you should run two queries, one for new messages where you fetch all the headers you need and one query where you will only ask for uid, message-id and flags of the old messages.
+Use your stored last fetched uid value to distinct between new and old messages (again as long as uidvalidity did not change).
+
+```php
+
+// retrieve only flags, uid and message-id of messages (to update their status).
+// All messages with a uid lower than $lastfetcheduid that are known to your application but aren't in the result set of this function have been deleted from the mailbox
+
+$messagearray = $mailbox->getMessageupdate($lastfetcheduid);
+
+foreach ($messagearray as $message) {
+  // $message is an object of \bjc\roundcubeimap\message
+}
+```
+
+Note that the $message object and it's child object $messageheaders will not have the standard set of headers. By default only $uid, $id and the flags will be available.
+If you need still more headers you can add them by giving a second argument to the function call:
+
+```php
+$messagearray = $mailbox->getMessageupdate($lastfetcheduid, ['subject', 'date']);
+```
+
+After the update query, run the query for new messages:
+```php
+$messagearray = $mailbox->getMessageshigherthan($lastfetcheduid);
+
+foreach ($messagearray as $message) {
+  // $message is an object of \bjc\roundcubeimap\message
+}
+```
 
 
 ### Messageheaders
@@ -168,7 +230,7 @@ If your server does not support CONDSTORE and QRESYNC then you have to fetch at 
 To retrieve headers from the message object, you have the following options:
 
 ```php
-// message identificatoin
+// message identification
 $uid = $message->getUID(); // UID of message
 $id = $message->getID(); // globally unique alphanumeric message ID
 
@@ -197,6 +259,7 @@ $headerarray = $message->getHeaders();
 
 ```
 
+
 #### Email address object
 
 For the emailaddress object you can do the following:
@@ -212,9 +275,8 @@ $fulladdress = $from->getFulladdress; // Guybrush Threepwood <guy@mightypirates.
 ```
 
 
-## To Do (will be continued after 20th of October 2021)
+## To Do:
 
-* Add possibility to fetch only UIDs and flags (in case condstore and qresync are not availabel)
 * Add possibility to customize which headers should be fetched and stored in the message object
 * Add retrieval of bodystructure and attachments
 * Add choice whether retrieve bodystructure and attachments at time of fetching headers or only if body is requested from the message object

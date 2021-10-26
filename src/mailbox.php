@@ -19,18 +19,32 @@ class mailbox {
         return $this->mailboxname;
     }
 
-    public function getMessageshigherthan($lastfetcheduid) {
+    public function getMessageshigherthan($lastfetcheduid, $add_headers = []) {
         
         $nextuid = $lastfetcheduid + 1;
-        $messages = $this->getMessageSequence("$nextuid" . ":*");
+        $messages = $this->getMessageSequence("$nextuid" . ":*", $add_headers);
         
         return $messages;
         
     }
     
-    public function getMessageSequence($message_set) {
-    
-        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, ['message-id', 'uid', 'references']);
+    public function getMessageupdate($lastfetcheduid, $add_headers = []) {
+        
+        $query_items = ['UID', 'FLAGS'];
+        
+        $headers = ["message-id"];
+        
+        if (!empty($add_headers)) {
+            $add_headers = array_map('strtoupper', $add_headers);
+            $headers     = array_unique(array_merge($headers, $add_headers));
+        }
+        
+        $query_items[] = 'BODY.PEEK[HEADER.FIELDS (' . implode(' ', $headers) . ')]';
+        
+        
+        $message_set = "1:" . $lastfetcheduid;
+        
+        $result = $this->rcube_imap_generic->fetch($this->mailboxname, $message_set, true, $query_items);
         
         $resultarray = array();
         
@@ -46,9 +60,34 @@ class mailbox {
         
     }
     
-    public function getMessage($uid) {
+    public function getMessageSequence($message_set, $add_headers = []) {
+
+        $headers = ['message-id', 'uid', 'references'];
         
-        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $uid, true, false, ['message-id', 'uid', 'references']);
+        $headers = array_unique(array_merge($headers, $add_headers));
+        
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, $headers);
+
+        $resultarray = array();
+        
+        foreach ($result as $rcube_message_header) {
+            
+            $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header);
+            
+            $resultarray[] = $message;
+            
+        }
+        
+        return $resultarray;
+        
+    }
+    
+    public function getMessage($uid, $add_headers = []) {
+        
+        $headers = ['message-id', 'uid', 'references'];
+        $headers = array_unique(array_merge($headers, $add_headers));
+        
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $uid, true, false, $add_headers);
         
         $message = reset($result);
         
@@ -56,11 +95,11 @@ class mailbox {
         
     }
     
-    public function synchronize($stored_highestmodseq, $stored_uidvalidity) {
+    public function synchronize($stored_highestmodseq, $stored_uidvalidity, $add_headers = []) {
         
         $qresync   = $this->connection_data["capabilities"]["qresync"];
         $condstore = $this->connection_data["capabilities"]["condstore"];
-        $qresyn_enable_failed = $this->connection_data["qresync_enable_failed"];
+        $qresync_enable_failed = $this->connection_data["qresync_enable_failed"];
         
         $status_object = $this->getStatus();
         
@@ -92,7 +131,7 @@ class mailbox {
             $returnarray["statusmessage"] = 'QRESYNC not supported on specified mailbox';
             $returnarray["status"] = 0;
             
-        } elseif (!empty($qresyn_enable_failed)) {
+        } elseif (!empty($qresync_enable_failed)) {
 
             $returnarray["statusmessage"] = 'Failed to enable QRESYNC on this connection';
             $returnarray["status"] = 0;            
@@ -101,7 +140,12 @@ class mailbox {
                                       
             $query_items = ['UID', 'RFC822.SIZE', 'FLAGS', 'INTERNALDATE'];
             $headers     = ['DATE', 'FROM', 'TO', 'SUBJECT', 'CONTENT-TYPE', 'CC', 'REPLY-TO', 'LIST-POST', 'DISPOSITION-NOTIFICATION-TO', 'X-PRIORITY', 'MESSAGE-ID', 'UID', 'REFERENCES'];
-                
+
+            if (!empty($add_headers)) {
+                $add_headers = array_map('strtoupper', $add_headers);
+                $headers     = array_unique(array_merge($headers, $add_headers));
+            }
+            
             $query_items[] = 'BODY.PEEK[HEADER.FIELDS (' . implode(' ', $headers) . ')]';
             
             $message_set = "1" . ":*";
@@ -127,7 +171,7 @@ class mailbox {
         
         return $returnarray;
     }
-    
+        
     public function getStatus() {
         
         $requestarray = array('UIDNEXT', 'UIDVALIDITY', 'RECENT');
@@ -146,6 +190,51 @@ class mailbox {
         }
         
         return $obj;
+        
+    }
+    
+    
+    
+    public function checkCondstore() {
+        
+        $returnvalue = true;
+        
+        $condstore = $this->connection_data["capabilities"]["condstore"];
+        
+        if (!$condstore) {
+            $returnvalue = false;
+        }
+        
+        return $returnvalue;
+        
+    }
+    
+    
+    public function checkQresync() {
+        
+        $qresync   = $this->connection_data["capabilities"]["qresync"];
+        $condstore = $this->connection_data["capabilities"]["condstore"];
+        $qresync_enable_failed = $this->connection_data["qresync_enable_failed"];
+        
+        $status_object = $this->getStatus();
+        
+        $uidvalidity = (int) $status_object->uidvalidity;
+        $highestmodseq = (int) $status_object->highestmodseq;
+        
+        $stored_highestmodseq = (int) $stored_highestmodseq;
+        $stored_uidvalidity = (int) $stored_uidvalidity;
+
+        $returnvalue = true;
+        
+        if (!$qresync && !$condstore) {
+            $returnvalue = false;
+        } elseif (empty($highestmodseq)) {
+            $returnvalue = false;
+        } elseif (!empty($qresync_enable_failed)) {
+            $returnvalue = false;
+        }
+
+        return $returnvalue;
         
     }
     
