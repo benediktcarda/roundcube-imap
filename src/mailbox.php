@@ -19,16 +19,16 @@ class mailbox {
         return $this->mailboxname;
     }
 
-    public function getMessageshigherthan($lastfetcheduid, $add_headers = []) {
+    public function getMessageshigherthan($lastfetcheduid, $bodystr = false, $add_headers = []) {
         
         $nextuid = $lastfetcheduid + 1;
-        $messages = $this->getMessageSequence("$nextuid" . ":*", $add_headers);
+        $messages = $this->getMessageSequence("$nextuid" . ":*", $bodystr, $add_headers);
         
         return $messages;
         
     }
     
-    public function getMessageupdate($lastfetcheduid, $add_headers = []) {
+    public function getMessageupdate($lastfetcheduid, $bodystr = false, $add_headers = []) {
         
         $query_items = ['UID', 'FLAGS'];
         
@@ -41,6 +41,10 @@ class mailbox {
         
         $query_items[] = 'BODY.PEEK[HEADER.FIELDS (' . implode(' ', $headers) . ')]';
         
+        if ($bodystr == true) {
+            $query_items[] = 'BODYSTRUCTURE';
+        }
+        
         
         $message_set = "1:" . $lastfetcheduid;
         
@@ -50,7 +54,7 @@ class mailbox {
         
         foreach ($result as $rcube_message_header) {
             
-            $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header);
+            $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header, $this->mailboxname);
             
             $resultarray[] = $message;
             
@@ -60,19 +64,19 @@ class mailbox {
         
     }
     
-    public function getMessageSequence($message_set, $add_headers = []) {
+    public function getMessageSequence($message_set, $bodystr = false, $add_headers = []) {
 
         $headers = ['message-id', 'uid', 'references'];
         
         $headers = array_unique(array_merge($headers, $add_headers));
         
-        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, false, $headers);
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $message_set, true, $bodystr, $headers);
 
         $resultarray = array();
         
         foreach ($result as $rcube_message_header) {
             
-            $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header);
+            $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header, $this->mailboxname);
             
             $resultarray[] = $message;
             
@@ -82,20 +86,22 @@ class mailbox {
         
     }
     
-    public function getMessage($uid, $add_headers = []) {
+    public function getMessage($uid, $bodystr = false, $add_headers = []) {
         
         $headers = ['message-id', 'uid', 'references'];
         $headers = array_unique(array_merge($headers, $add_headers));
         
-        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $uid, true, true, $add_headers);
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $uid, true, $bodystr, $add_headers);
         
-        $message = reset($result);
+        $rcube_message_header = reset($result);
+        
+        $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header, $this->mailboxname);
         
         return $message;
         
     }
     
-    public function synchronize($stored_highestmodseq, $stored_uidvalidity, $add_headers = []) {
+    public function synchronize($stored_highestmodseq, $stored_uidvalidity, $bodystr = false, $add_headers = []) {
         
         $qresync   = $this->connection_data["capabilities"]["qresync"];
         $condstore = $this->connection_data["capabilities"]["condstore"];
@@ -148,6 +154,10 @@ class mailbox {
             
             $query_items[] = 'BODY.PEEK[HEADER.FIELDS (' . implode(' ', $headers) . ')]';
             
+            if ($bodystr == true) {
+                $query_items[] = 'BODYSTRUCTURE';
+            }
+            
             $message_set = "1" . ":*";
             
             $result = $this->rcube_imap_generic->fetch($this->mailboxname, $message_set, true, $query_items, $stored_highestmodseq, true);
@@ -156,7 +166,7 @@ class mailbox {
             
             foreach ($result as $rcube_message_header) {
                 
-                $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header);
+                $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header, $this->mailboxname);
                 
                 $messagearray[] = $message;
                 
