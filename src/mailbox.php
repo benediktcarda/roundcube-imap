@@ -87,7 +87,7 @@ class mailbox {
         $headers = ['message-id', 'uid', 'references'];
         $headers = array_unique(array_merge($headers, $add_headers));
         
-        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $uid, true, false, $add_headers);
+        $result = $this->rcube_imap_generic->fetchHeaders($this->mailboxname, $uid, true, true, $add_headers);
         
         $message = reset($result);
         
