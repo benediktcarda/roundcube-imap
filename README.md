@@ -139,7 +139,7 @@ Synchronization will help you to keep your applications data up to date with wha
 $condstore = $mailbox->checkCondstore();
 // true if condstore is available, false if not
 
-$qresync = $mailbox->checkQresyn();
+$qresync = $mailbox->checkQresync();
 // true if qresync is available, false if not
 ```
 
@@ -277,7 +277,6 @@ $fulladdress = $from->getFulladdress; // Guybrush Threepwood <guy@mightypirates.
 
 ## To Do:
 
-* Add possibility to customize which headers should be fetched and stored in the message object
 * Add retrieval of bodystructure and attachments
 * Add choice whether retrieve bodystructure and attachments at time of fetching headers or only if body is requested from the message object
 * Add possibility to add messages to folders
