@@ -95,9 +95,15 @@ foreach ($messagearray as $message) {
 
 ```
 
-Note that the above command will fetch a standard set of headers of the selected messages. You can add additional headers you would like to fetch by adding an array of strings as a second variable to the function call:
+If you plan to analyse the bodystructure of all e-mails you already can request the bodystructure to be fetched (and stored in the message object) for all messages in the set by setting the second variable of the function call to true:
 ```php
-$messagearray = $mailbox->getMessageshigherthan($lastfetcheduid, ['X-Spam-Status','X-Mailer']);
+$messagearray = $mailbox->getMessageshigherthan($lastfetcheduid, true);
+```
+Anyway the message object will take care of fetching the bodystructure later if needed but not yet stored in the message object.
+
+Note that the above command will fetch a standard set of headers of the selected messages. You can add additional headers you would like to fetch by adding an array of strings as a third variable to the function call:
+```php
+$messagearray = $mailbox->getMessageshigherthan($lastfetcheduid, false, ['X-Spam-Status','X-Mailer']);
 ```
 
 #### Get messages of a certain message set (e.g. if you want to fetch all messages again because uidvalidity changed)
@@ -113,10 +119,15 @@ foreach ($messagearray as $message) {
 }
 
 ```
-
-Note that the above command will fetch a standard set of headers of the selected messages. You can add additional headers you would like to fetch by adding an array of strings as a second variable to the function call:
+If you plan to analyse the bodystructure of all e-mails you already can request the bodystructure to be fetched (and stored in the message object) for all messages in the set by setting the second variable of the function call to true:
 ```php
-$messagearray = $mailbox->getMessageSequence($message_set, ['X-Spam-Status','X-Mailer']);
+$messagearray = $mailbox->getMessageSequence($message_set, true);
+```
+Anyway the message object will take care of fetching the bodystructure later if needed but not yet stored in the message object.
+
+Note that the above command will fetch a standard set of headers of the selected messages. You can add additional headers you would like to fetch by adding an array of strings as a third variable to the function call:
+```php
+$messagearray = $mailbox->getMessageSequence($message_set, false, ['X-Spam-Status','X-Mailer']);
 ```
 
 #### If you know the UID of the message you want to retrieve
@@ -126,9 +137,15 @@ $message = $mailbox->getMessage($uid);
 // $message is an object of \bjc\roundcubeimap\message
 ```
 
-Note that the above command will fetch a standard set of headers of the selected message. You can add additional headers you would like to fetch by adding an array of strings as a second variable to the function call:
+If you plan to analyse the bodystructure of the e-mail you already can request the bodystructure to be fetched (and stored in the message object) by setting the second variable of the function call to true:
 ```php
-$message = $mailbox->getMessage($uid, ['X-Spam-Status','X-Mailer']);
+$messagearray = $mailbox->getMessage($uid, true);
+```
+Anyway the message object will take care of fetching the bodystructure later if needed but not yet stored in the message object.
+
+Note that the above command will fetch a standard set of headers of the selected message. You can add additional headers you would like to fetch by adding an array of strings as a third variable to the function call:
+```php
+$message = $mailbox->getMessage($uid, false, ['X-Spam-Status','X-Mailer']);
 ```
 
 ### Checking whether your server is capable of synchronization (i.e. has CONDSTORE and QRESYNC extension implemented)
@@ -184,9 +201,16 @@ foreach ($vanishedarray as $uid) {
 
 ```
 
-Note that the above command will fetch a standard set of headers of the selected message. You can add additional headers you would like to fetch by adding an array of strings as a third variable to the function call:
+If you plan to analyse the bodystructure of the e-mails you already can request the bodystructure to be fetched (and stored in the message object) by setting the third variable of the function call to true:
 ```php
-$synchronize_result = $mailbox->synchronize($stored_highestmodseq, $stored_uidvalidity, ['X-Spam-Status','X-Mailer']);
+$messagearray = $mailbox->synchronize($stored_highestmodseq, $stored_uidvalidity, true);
+```
+Anyway the message object will take care of fetching the bodystructure later if needed but not yet stored in the message object.
+
+
+Note that the above command will fetch a standard set of headers of the selected message. You can add additional headers you would like to fetch by adding an array of strings as a fourth variable to the function call:
+```php
+$synchronize_result = $mailbox->synchronize($stored_highestmodseq, $stored_uidvalidity, false, ['X-Spam-Status','X-Mailer']);
 ```
 
 
@@ -212,7 +236,7 @@ Note that the $message object and it's child object $messageheaders will not hav
 If you need still more headers you can add them by giving a second argument to the function call:
 
 ```php
-$messagearray = $mailbox->getMessageupdate($lastfetcheduid, ['subject', 'date']);
+$messagearray = $mailbox->getMessageupdate($lastfetcheduid, false, ['subject', 'date']);
 ```
 
 After the update query, run the query for new messages:
@@ -280,3 +304,4 @@ $fulladdress = $from->getFulladdress; // Guybrush Threepwood <guy@mightypirates.
 * Add retrieval of bodystructure and attachments
 * Add choice whether retrieve bodystructure and attachments at time of fetching headers or only if body is requested from the message object
 * Add possibility to add messages to folders
+* Add delete command
