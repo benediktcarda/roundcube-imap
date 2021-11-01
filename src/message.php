@@ -208,14 +208,15 @@ class message {
     public function getAllparts() {
         
         $bodystructure = $this->getBodystructure();
-
-        file_put_contents("/tmp/test.txt", print_r($bodystructure, true), FILE_APPEND);
+        
+        $bodyparts = array();
         
         foreach ($bodystructure as $partno => $partitem) {
-            $bodypart = $this->getPart($partno);
-            file_put_contents("/tmp/test.txt", "---- BODYPART $partno ----\n" . print_r($bodypart, true), FILE_APPEND);
+            $bodyparts[] = $this->getPart($partno);
         }
-                
+
+        return $bodyparts;
+        
     }
     
 }
