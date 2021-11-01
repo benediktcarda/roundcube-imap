@@ -49,7 +49,7 @@ class utils {
         file_put_contents("/tmp/test.txt", "\nRaw rangearray: " . print_r($rangearray, true), FILE_APPEND);
         
         foreach ($rangearray as $rangeitem) {
-            if (is_int($rangeitem)) {
+            if (preg_match('/[0-9]+/', $rangeitem) > 0) {
                 $uidarray[] = $rangeitem;
             } else {
                 $rangestartandend = explode(':', $rangeitem);
