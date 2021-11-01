@@ -95,7 +95,11 @@ class mailbox {
         
         $rcube_message_header = reset($result);
         
-        $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header, $this->mailboxname);
+        if ($rcube_message_header instanceof \rcube_message_header) {
+            $message = new \bjc\roundcubeimap\message($this->rcube_imap_generic, $rcube_message_header, $this->mailboxname);
+        } else {
+            $message = null;
+        }
         
         return $message;
         
