@@ -54,12 +54,16 @@ class utils {
                 $rangestart = $rangestartandend[0];
                 $rangeend = $rangestartandend[1];
                 
-                $i = $rangestart;
+                if (preg_match('/^[0-9]+$/', $rangestart) > 0 AND preg_match('/^[0-9]+$/', $rangeend) > 0) {
                 
-                while ($i <= $rangeend) {
-                    $uidarray[] = $i;
+                    $i = $rangestart;
+                
+                    while ($i <= $rangeend) {
+                        $uidarray[] = $i;
                     
-                    $i++;
+                        $i++;
+                    }
+                    
                 }
                 
             }
