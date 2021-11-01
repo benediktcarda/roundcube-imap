@@ -197,12 +197,25 @@ class message {
                         $o_part->charset = $this->default_charset;
                     }
                 }
-                $body = \rcube_charset::convert($body, $o_part->charset);
+                $body = \rcube_charset::convert($body, $o_part->charset, 'UTF-8');
             }
         }
         
         return $body;
     }
     
+    
+    public function getAllparts() {
+        
+        $bodystructure = $this->getBodystructure();
+
+        file_put_contents("/tmp/test.txt", print_r($bodystructure, true), FILE_APPEND);
+        
+        foreach ($bodystructure as $partno => $partitem) {
+            $bodypart = $this->getPart($partno);
+            file_put_contents("/tmp/test.txt", "---- BODYPART $partno ----\n" . print_r($bodypart, true), FILE_APPEND);
+        }
+                
+    }
     
 }
