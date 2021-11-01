@@ -165,7 +165,7 @@ class message {
         $structure = $this->getBodystructure();
         $part_data = $this->rcube_imap_generic->getStructurePartData($structure, $part);
             
-        $o_part = new rcube_message_part;
+        $o_part = new \rcube_message_part;
         $o_part->ctype_primary   = $part_data['type'];
         $o_part->ctype_secondary = $part_data['subtype'];
         $o_part->encoding        = $part_data['encoding'];
@@ -197,7 +197,7 @@ class message {
                         $o_part->charset = $this->default_charset;
                     }
                 }
-                $body = rcube_charset::convert($body, $o_part->charset);
+                $body = \rcube_charset::convert($body, $o_part->charset);
             }
         }
         
