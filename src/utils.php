@@ -4,7 +4,7 @@ namespace bjc\roundcubeimap;
 
 class utils {
    
-    static public function decodeAddresslist($addresslist) {
+    public static function decodeAddresslist($addresslist) {
         
         $addressarray = \rcube_mime::decode_address_list($addresslist);
         
@@ -24,7 +24,7 @@ class utils {
         
     }
     
-    static public function decodeAddress($addressinput) {
+    public static function decodeAddress($addressinput) {
         
         $addressarray = \rcube_mime::decode_address_list($addressinput);
         
@@ -40,7 +40,7 @@ class utils {
         
     }
     
-    static public function decodeMessageRanges($rangestring) {
+    public static function decodeMessageRanges($rangestring) {
         
         $uidarray = array();
         
@@ -72,5 +72,8 @@ class utils {
         
         return $uidarray;
     }
+    
+    
+    
     
 }

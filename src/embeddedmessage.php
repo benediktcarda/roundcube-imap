@@ -2,7 +2,9 @@
 
 namespace bjc\roundcubeimap;
 
-class message {
+// nicht implementiert: hier muss man schauen, wie man ein rcube_message_header object baut. Normalerweise macht das rcube_imap_generic/fetch
+
+class embeddedmessage {
     
     protected $rcube_imap_generic;
     protected $rcube_message_header;
@@ -16,19 +18,13 @@ class message {
     protected $textplain;
     protected $texthtml;
        
-    public function __construct(\rcube_imap_generic $rcube_imap_generic, \rcube_message_header $rcube_message_header, $mailboxname) {
+    public function __construct(\rcube_imap_generic $rcube_imap_generic, \rcube_message_header $rcube_message_header, $mailboxname, $parent_uid) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->rcube_message_header = $rcube_message_header;
         $this->mailboxname = $mailboxname;
         
         $this->messageheaders = new \bjc\roundcubeimap\messageheaders($rcube_message_header);
         
-    }
-
-    public function getUID() {
-        $returnvalue = $this->rcube_message_header->uid;
-        
-        return $returnvalue;
     }
     
     public function getID() {
@@ -76,66 +72,6 @@ class message {
     }
     
     
-    public function isAnswered() {
-        
-        $flags = $this->rcube_message_header->flags;
-        
-        if (isset($flags["ANSWERED"])) {
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-
-    public function isDeleted() {
-        
-        $flags = $this->rcube_message_header->flags;
-        
-        if (isset($flags["DELETED"])) {
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-    
-    public function isDraft() {
-        
-        $flags = $this->rcube_message_header->flags;
-        
-        if (isset($flags["DRAFT"])) {
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-    
-    public function isSeen() {
-        
-        $flags = $this->rcube_message_header->flags;
-        
-        if (isset($flags["SEEN"])) {
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-    
-    public function isFlagged() {
-        
-        $flags = $this->rcube_message_header->flags;
-        
-        if (isset($flags["FLAGGED"])) {
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-    
     public function getHeader($field) {
         
         $returnvalue = $this->rcube_message_header->get($field);
@@ -154,8 +90,6 @@ class message {
         
     }
 
-
-    
     // input variable $part is mime_id of requested part
     
     public function getPart($part = 1) {
@@ -296,11 +230,9 @@ class message {
                 $this->inlineobjects[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $mailboxname, $uid, $rcube_message_part, $filename);
             }
             
-            // Klasse embeddedmessage funktioniert noch nicht. Die Frage ist, wie kann man der Klasse den Message-Header rcube_message_header liefern
-            
-            // if ($disposition == 'attachment' AND $ctype_primary == 'message') {
-            //    $this->embeddedmessages[] = new \bjc\roundcubeimap\embeddedmessage($this->rcube_imap_generic, $mailboxname, $uid, $rcube_message_part, $filename);
-            // }
+            if ($disposition == 'attachment' AND $ctype_primary == 'message') {
+                $this->embeddedmessages[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $mailboxname, $uid, $rcube_message_part, $filename);
+            }
             
         }
         
