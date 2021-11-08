@@ -8,6 +8,7 @@ class message {
     protected $rcube_message_header;
     protected $messageheaders;
     protected $mailboxname;
+    protected $uid;
     protected $default_charset = 'ISO-8859-1';
     protected $attachments = array();
     protected $embeddedmessages = array();
@@ -20,15 +21,14 @@ class message {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->rcube_message_header = $rcube_message_header;
         $this->mailboxname = $mailboxname;
+        $this->uid = $this->rcube_message_header->uid;
         
         $this->messageheaders = new \bjc\roundcubeimap\messageheaders($rcube_message_header);
         
     }
 
     public function getUID() {
-        $returnvalue = $this->rcube_message_header->uid;
-        
-        return $returnvalue;
+        return $this->uid;
     }
     
     public function getID() {
@@ -281,7 +281,7 @@ class message {
             }
             
             if ($disposition == 'attachment' AND !empty($filename) AND $ctype_primary != 'message') {
-                $this->attachments[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $mailboxname, $uid, $rcube_message_part, $filename);
+                $this->attachments[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $this->mailboxname, $this->uid, $rcube_message_part);
             }
             
             if (empty($this->textplain) AND $ctype_primary == 'text' AND $ctype_secondary == 'plain' AND $childofembeddedmessage == false) {
@@ -293,7 +293,7 @@ class message {
             }
             
             if ($disposition == 'inline' AND !empty($filename) AND $ctype_primary != 'message' AND $childofembeddedmessage == false) {
-                $this->inlineobjects[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $mailboxname, $uid, $rcube_message_part, $filename);
+                $this->inlineobjects[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $this->mailboxname, $this->uid, $rcube_message_part);
             }
             
             // Klasse embeddedmessage funktioniert noch nicht. Die Frage ist, wie kann man der Klasse den Message-Header rcube_message_header liefern

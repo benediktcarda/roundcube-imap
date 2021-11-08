@@ -11,13 +11,13 @@ class attachment {
     protected $filename;
     protected $default_charset = 'ISO-8859-1';
        
-    public function __construct(\rcube_imap_generic $rcube_imap_generic, $mailboxname, $uid, \rcube_message_part $rcube_message_part, $filename) {
+    public function __construct(\rcube_imap_generic $rcube_imap_generic, $mailboxname, $uid, \rcube_message_part $rcube_message_part) {
                 
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->mailboxname = $mailboxname;
         $this->uid = $uid;
         $this->rcube_message_part = $rcube_message_part;
-        $this->filename = $filename;
+        $this->filename = $rcube_message_part->filename;
         
     }
 
