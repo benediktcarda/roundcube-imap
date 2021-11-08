@@ -283,7 +283,6 @@ $headerarray = $message->getHeaders();
 
 ```
 
-
 #### Email address object
 
 For the emailaddress object you can do the following:
@@ -298,10 +297,52 @@ $name = $from->getName(); // Guybrush Threepwood
 $fulladdress = $from->getFulladdress; // Guybrush Threepwood <guy@mightypirates.com>
 ```
 
+### Message Parts
+
+```php
+// get plain text of email if present
+$plaintext = $message->getBodyText();
+
+// get html text of message if present
+$htmltext = $message->getBodyHtml();
+
+// get attachments of message
+$attachments = $message->getAttachments(); // $attachment is an array of objects of class \bjc\roundcubeimap\attachment
+
+// get inline images of message
+$inlineimages = $message->getInlineobjects(); // $inlineimages is an array of objects of class \bjx\roundcubeimap\attachment
+
+```
+
+### Attachments and inline objects
+
+```php
+foreach ($attachments as $attachment) {
+
+	$filename = $attachment->getFilename();
+	$charset = $attachment->getCharset(); // if available
+   $data = $attachment->getData(); // content of attachment
+
+}
+```
+
+Inline images use the same class (\bjc\roundcubeimap\attachment) therefore it has the same available methods:
+
+```php
+foreach ($inlineobjects as $inlineobject) {
+
+	$filename = $inlineobject->getFilename();
+	$charset = $inlineobject->getCharset(); // if available
+   $data = $inlineobject->getData(); // content of inline image
+
+}
+```
+
+
 
 ## To Do:
-
-* Add retrieval of bodystructure and attachments
-* Add choice whether retrieve bodystructure and attachments at time of fetching headers or only if body is requested from the message object
+* Add create mailbox, rename mailbox and clear mailbox command in class \bjc\roundcubeimap\connection
+* Add count messages, count recent, count Unseen command in class \bjc\roundcubeimap\mailbox
+* Add copy, move, delete and flag command in class \bjc\roundcubeimap\message
+* Create class \bjc\roundcubeimap\embeddedmessage to give a possibility to deal with embedded messages
 * Add possibility to add messages to folders
-* Add delete command
