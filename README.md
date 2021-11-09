@@ -51,10 +51,28 @@ Or retrieve a specific mailbox:
 $mailbox = $connection->getMailbox('INBOX');
 ```
 
+Create a mailbox:
+
+```php
+$connection->createMailbox($mailboxname);
+```
+
+Rename a mailbox:
+
+```php
+$connection->renameMailbox($mailboxname, $new_mailboxname);
+```
+
+Clear a mailbox (remove all messages):
+
+```php
+$connection->clearMailbox($mailboxname);
+```
+
 Delete a mailbox:
 
 ```php
-$connection->deleteMailbox($mailbox);
+$connection->deleteMailbox($mailboxname);
 ```
 
 #### Status of a mailbox
@@ -341,7 +359,6 @@ foreach ($inlineobjects as $inlineobject) {
 
 
 ## To Do:
-* Add create mailbox, rename mailbox and clear mailbox command in class \bjc\roundcubeimap\connection
 * Add count messages, count recent, count Unseen command in class \bjc\roundcubeimap\mailbox
 * Add copy, move, delete and flag command in class \bjc\roundcubeimap\message
 * Create class \bjc\roundcubeimap\embeddedmessage to give a possibility to deal with embedded messages
