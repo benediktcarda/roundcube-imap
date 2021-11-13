@@ -54,24 +54,28 @@ $mailbox = $connection->getMailbox('INBOX');
 Create a mailbox:
 
 ```php
-$connection->createMailbox($mailboxname);
+// true on success, throws \Exception on error
+$result = $connection->createMailbox($mailboxname);
 ```
 
 Rename a mailbox:
 
 ```php
+// true on success, throws \Exception on error
 $connection->renameMailbox($mailboxname, $new_mailboxname);
 ```
 
 Clear a mailbox (remove all messages):
 
 ```php
+// true on success, throws \Exception on error
 $connection->clearMailbox($mailboxname);
 ```
 
 Delete a mailbox:
 
 ```php
+// true on success, throws \Exception on error
 $connection->deleteMailbox($mailboxname);
 ```
 
@@ -356,10 +360,77 @@ foreach ($inlineobjects as $inlineobject) {
 }
 ```
 
+### Flag messages
+
+You can set and clear message flags within the mailbox object or within the message object:
+
+```php
+
+// First parameter is an array of the flags you want to set, second parameter is the message set you want to set the flags for
+// returns true if successful, throws exception if not
+
+$message_set = '1:*';
+$flags = array('FLAGGED', 'SEEN');
+
+$result = $mailbox->setFlag($flags, $message_set);
+
+// First parameter is an array of the flags you want to clear, second parameter is the message set you want to clear the flags for
+// returns true if successful, throws exception if not
+$message_set = '12322';
+$flags = array('FLAGGED');
+
+$result = $mailbox->clearFlag($flags, $message_set);
+
+
+// Call from within the message object
+$result = $message->setFlag($flags);
+$result = $message->clearFlag($flags);
+
+
+
+```
+
+### Copy, move, delete messages
+
+You can copy, move and delete messages within the mailbox object or within the message object:
+
+```php
+
+$message_set = '1:10';
+$targetmailbox = 'newmailboxname';
+
+// returns true if successful, throws exception if not
+$result = $mailbox->copyMessages($message_set, $targetmailbox);
+$result = $mailbox->moveMessages($message_set, $targetmailbox);
+
+$message_set = array(11320,11330);
+$result = $mailbox->deleteMessages($message_set);
+
+// Call from within the message object
+// returns true if successful, throws exception if not
+$result = $message->copyMessage($targetmailbox);
+$result = $message->moveMessage($targetmailbox);
+$result = $message->deleteMessage();
+
+```
+
+
+### Count messages
+
+You can count all messages, recent messages or unseen messages in a mailbox object:
+
+```php
+
+// returns number of messages if successful, throws exception if not
+$number_of_messages = $mailbox->countMessage();
+$number_of_recent_messages = $mailbox->countRecent();
+$number_of_unseen_messages = $mailbox->countUnseen();
+
+```
+
+
 
 
 ## To Do:
-* Add count messages, count recent, count Unseen command in class \bjc\roundcubeimap\mailbox
-* Add copy, move, delete and flag command in class \bjc\roundcubeimap\message
 * Create class \bjc\roundcubeimap\embeddedmessage to give a possibility to deal with embedded messages
 * Add possibility to add messages to folders
