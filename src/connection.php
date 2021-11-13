@@ -81,7 +81,7 @@ class connection {
         
         $result = $this->rcube_imap_generic->createFolder($mailboxname);
         
-        if ($result != 0) {
+        if ($result == false) {
             throw new \Exception('Mailbox creation failed.');
         }
         
@@ -102,7 +102,7 @@ class connection {
     public function deleteMailbox($mailboxname) {
         $result = $this->rcube_imap_generic->deleteFolder($mailboxname);
         
-        if ($result != 0) {
+        if ($result == false) {
             throw new \Exception('Mailbox deletion failed.');
         }
 
@@ -124,7 +124,7 @@ class connection {
     public function renameMailbox($mailboxname, $new_mailboxname) {
         $result = $this->rcube_imap_generic->renameFolder($mailboxname, $new_mailboxname);
         
-        if ($result != 0) {
+        if ($result == false) {
             throw new \Exception('Rename mailbox failed.');
         }
         
