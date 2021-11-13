@@ -27,15 +27,39 @@ class message {
         
     }
 
+    
+    /**
+     * Get UID of message
+     *
+     * @return int UID of message
+     *
+     */
+    
     public function getUID() {
         return $this->uid;
     }
+
+    
+    /**
+     * Get alphanumeric id of message
+     *
+     * @return string ID of message
+     *
+     */
     
     public function getID() {
         $returnvalue = $this->rcube_message_header->get('message-id');
         
         return $returnvalue;
     }
+
+    
+    /**
+     * Get message date
+     *
+     * @return obj A datetime object
+     *
+     */
     
     public function getDate() {
         
@@ -43,6 +67,14 @@ class message {
         
         return $returnvalue;
     }
+
+    
+    /**
+     * Get timestamp of message
+     *
+     * @return int Timestamp of message
+     *
+     */
     
     public function getTimestamp() {
         
@@ -51,23 +83,55 @@ class message {
         return $timestamp;
     }
 
+    
+    /**
+     * Get subject of message
+     *
+     * @return string subject of message
+     *
+     */
+    
     public function getSubject() {
         $returnvalue = $this->messageheaders->get("subject");
 
         return $returnvalue;
     }
 
+    
+    /**
+     * Get sender of message
+     *
+     * @return obj object of \bjc\roundcubeimap\emailaddress
+     *
+     */
+    
     public function getFrom() {
         $returnvalue = $this->messageheaders->get('from');
         
         return $returnvalue;        
     }
+
+    
+    /**
+     * Get recipients of message
+     *
+     * @return array array of objects of \bjc\roundcubeimap\emailaddress
+     *
+     */
     
     public function getTo() {
         $returnvalue = $this->messageheaders->get('to');
         
         return $returnvalue;        
     }
+
+    
+    /**
+     * Get cc recipients of message
+     *
+     * @return array array of objects of \bjc\roundcubeimap\emailaddress
+     *
+     */
     
     public function getCC() {
         $returnvalue = $this->messageheaders->get('cc');
@@ -75,6 +139,13 @@ class message {
         return $returnvalue;
     }
     
+    
+    /**
+     * Get Answered flag of message
+     *
+     * @return bool Returns true if answered flag is set otherwise false
+     *
+     */
     
     public function isAnswered() {
         
@@ -88,6 +159,14 @@ class message {
         
     }
 
+    
+    /**
+     * Get Deleted flag of message
+     *
+     * @return bool Returns true if deleted flag is set otherwise false
+     *
+     */
+    
     public function isDeleted() {
         
         $flags = $this->rcube_message_header->flags;
@@ -99,6 +178,14 @@ class message {
         }
         
     }
+
+    
+    /**
+     * Get Draft flag of message
+     *
+     * @return bool Returns true if draft flag is set otherwise false
+     *
+     */
     
     public function isDraft() {
         
@@ -112,6 +199,14 @@ class message {
         
     }
     
+    
+    /**
+     * Get Seen flag of message
+     *
+     * @return bool Returns true if seen flag is set otherwise false
+     *
+     */
+    
     public function isSeen() {
         
         $flags = $this->rcube_message_header->flags;
@@ -123,6 +218,14 @@ class message {
         }
         
     }
+    
+    
+    /**
+     * Get Flagged flag of message
+     *
+     * @return bool Returns true if flagged flag is set otherwise false
+     *
+     */    
     
     public function isFlagged() {
         
@@ -136,6 +239,16 @@ class message {
         
     }
     
+    
+    /**
+     * Get specific header field of message
+     * 
+     * @param string Name of header
+     *
+     * @return string Value of header
+     *
+     */
+    
     public function getHeader($field) {
         
         $returnvalue = $this->rcube_message_header->get($field);
@@ -147,6 +260,14 @@ class message {
         return $returnvalue;
         
     }
+
+    
+    /**
+     * Get all headers of message
+     *
+     * @return array Array of key value pairs all header fields
+     *
+     */
     
     public function getHeaders() {
         
@@ -156,7 +277,14 @@ class message {
 
 
     
-    // input variable $part is mime_id of requested part
+    /**
+     * Get body part of message
+     * 
+     * @param $part  Body part number (mime_id) that should be retrieved
+     *
+     * @return string Bodypart value
+     *
+     */
     
     public function getPart($part = 1) {
         
@@ -203,6 +331,14 @@ class message {
         return $body;
     }
     
+    
+    /**
+     * Get html bodypart of message if available
+     *
+     * @return string Bodypart value
+     *
+     */
+    
     public function getBodyHtml() {
 
         $this->evaluateBodystructure();
@@ -211,12 +347,28 @@ class message {
         
     }
     
+    
+    /**
+     * Get plain text bodypart of message if available
+     *
+     * @return string Bodypart value
+     *
+     */
+    
     public function getBodyText() {
         
         $this->evaluateBodystructure();
         
         return $this->textplain;
     }
+    
+    
+    /**
+     * Get Attachments of message
+     *
+     * @return array of objects of \bjc\roundcubeimap\attachment
+     *
+     */
     
     public function getAttachments() {
         
@@ -227,6 +379,11 @@ class message {
     }
  
     
+    /**
+     * NOT IMPLEMENTED YET
+     *
+     */
+    
     public function getEmbeddedmessages() {
 
         $this->evaluateBodystructure();
@@ -234,6 +391,14 @@ class message {
         return $this->embeddedmessages;
         
     }
+    
+    
+    /**
+     * Get Inline objects of message
+     *
+     * @return array of objects of \bjc\roundcubeimap\attachment
+     *
+     */
     
     public function getInlineobjects() {
         
@@ -243,6 +408,127 @@ class message {
         
     }
     
+    
+    /**
+     * Copies message from the current mailbox to another mailbox of the same account
+     * Throws exception on error
+     *
+     * @param string          $to_mailboxname Mailbox the messages should be copied to
+     *
+     * @return bool true on success
+     *
+     */
+    
+    public function copyMessage($to_mailboxname) {
+
+        $result = $this->rcube_imap_generic->copy($this->uid, $this->mailboxname, $to_mailboxname);
+        
+        if ($result == false) {
+            throw new \Exception('Copying message failed.');
+        }
+        
+        return true;
+        
+    }
+
+    
+    /**
+     * Move message from this mailbox to another mailbox of the same account
+     * Throws exception on error
+     *
+     * @param string          $to_mailboxname Mailbox the messages should be copied to
+     *
+     * @return bool true on success
+     *
+     */
+    
+    public function moveMessage($to_mailboxname) {
+
+        $result = $this->rcube_imap_generic->move($this->uid, $this->mailboxname, $to_mailboxname);
+        
+        if ($result == false) {
+            throw new \Exception('Moving message failed.');
+        }
+        
+        return true;
+        
+    }
+    
+    
+    /**
+     * Delete (expunge) this message from mailbox
+     * Throws exception on error
+     *
+     * @return bool true on success
+     *
+     */
+    
+    public function deleteMessage() {
+        
+        $result = $this->rcube_imap_generic->expunge($this->mailboxname, $this->uid);
+        
+        if ($result == false) {
+            throw new \Exception('Deleting message failed.');
+        }
+        
+        return true;
+        
+    }
+    
+    
+    /**
+     * Sets flags to this message
+     * Throws exception on error
+     *
+     * @param array  $flags             Array of strings with flags that should be set
+     *
+     * @return bool true on success
+     */
+    
+    public function setFlag(array $flags) {
+        
+        foreach ($flags as $flag) {
+            $result = $this->rcube_imap_generic->flag($this->mailboxname, $this->uid, $flag);
+        }
+        
+        if ($result == false) {
+            throw new \Exception('Setting flags failed.');
+        }
+        
+        return true;
+        
+    }
+    
+    
+    /**
+     * Unsets flags to this message
+     * Throws exception on error
+     *
+     * @param array  $flags             Array of strings with flags that should be set
+     *
+     * @return bool true on success
+     *
+     */
+    
+    public function clearFlag(array $flags) {
+        
+        foreach ($flags as $flag) {
+            $result = $this->rcube_imap_generic->flag($this->mailboxname, $this->uid, $flag);
+        }
+        
+        if ($result == false) {
+            throw new \Exception('Unsetting flags failed.');
+        }
+        
+        return true;
+        
+    }
+    
+
+    
+    /**
+     * Evaluates bodystructure and saves results in this object
+     */
     
     protected function evaluateBodystructure() {
         
@@ -260,7 +546,13 @@ class message {
         
     }
     
-    // input variable is an array of rcube_message_part Objects
+    
+    /**
+     * Iterates through bodyparts and saves the body parts in this object
+     *
+     * @param array $parts Array of rcube_message_part objects
+     *
+     */
     
     protected function iteratethroughParts(array $parts, bool $childofembeddedmessage) {
         
@@ -306,6 +598,15 @@ class message {
         
     }
     
+    
+    /**
+     * Returns bodystructure of message
+     * If not fetched yet, bodystructure is fetched from the server
+     *
+     * @return bodystructure of message
+     *
+     */
+    
     protected function getBodystructure() {
         
         // if bodystructure is not available in rcube_message_header get it from the imap server
@@ -322,12 +623,10 @@ class message {
     /**
      * Build message part object
      *
-     * @param array  $part
+     * @param array  $part  An array of the bodystructure that should be analysed, e.g. the result of method getBodystructure()
      * @param int    $count
      * @param string $parent
      */
-    
-    // input variable $part is an array of the bodystructure that should be analysed, e.g. the result of method getBodystructure()
     
     protected function structure_part($part, $count = 0, $parent = '', $mime_headers = null)
     {
