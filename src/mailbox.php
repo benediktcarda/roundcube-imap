@@ -500,6 +500,8 @@ class mailbox {
         
         $result = $this->rcube_imap_generic->countRecent($this->mailboxname);
         
+        print "<br>result received: $result";
+        
         if ($result == false) {
             throw new \Exception('Counting messages failed.');
         }
