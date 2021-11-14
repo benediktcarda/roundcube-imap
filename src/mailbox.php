@@ -384,7 +384,7 @@ class mailbox {
     public function clearFlag(array $flags, $messageset) {
 
         foreach ($flags as $flag) {
-            $result = $this->rcube_imap_generic->flag($this->mailboxname, $messageset, $flag);
+            $result = $this->rcube_imap_generic->unflag($this->mailboxname, $messageset, $flag);
         }
 
         if ($result == false) {
