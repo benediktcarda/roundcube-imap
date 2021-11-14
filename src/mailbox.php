@@ -456,7 +456,8 @@ class mailbox {
     
     public function deleteMessages($messageset) {
         
-        $result = $this->rcube_imap_generic->expunge($this->mailboxname, $messageset);
+        $this->setFlag(array("DELETED"), $messageset);
+        $result = $this->rcube_imap_generic->expunge($this->mailboxname);
         
         if ($result == false) {
             throw new \Exception('Deleting messages failed.');
