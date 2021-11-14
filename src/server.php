@@ -7,7 +7,13 @@ class server {
     protected $host;
     protected $ssl_mode;
     
-    // SSL mode can be 'ssl', 'tls' or 'plain'
+    /**
+     * Factory to establish connections to the IMAP server and return the connections as objects
+     *
+     * @param string $host
+     * @param string $ssl_mode  SSL mode can be 'ssl', 'tls' or 'plain'
+     *
+     */
     
     public function __construct($host, $ssl_mode = 'tls') {
         $this->host = $host;
@@ -17,7 +23,14 @@ class server {
         
     }
     
-    // Function authenticate returns instance of \bjc\roundcubeimap\connection
+    /**
+     * Connects and authenticates to an IMAP server
+     *
+     * @param string $username 
+     * @param string $password 
+     *
+     * @return object instance of \bjc\roundcubeimap\connection
+     */
     
     public function authenticate($username, $password) {
 
