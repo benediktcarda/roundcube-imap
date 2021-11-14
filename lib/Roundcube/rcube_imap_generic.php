@@ -1733,11 +1733,15 @@ class rcube_imap_generic
         // Check internal cache
         $cache = $this->data['STATUS:'.$mailbox];
         if (!empty($cache) && isset($cache['RECENT'])) {
+            print "has internal cache";
             return (int) $cache['RECENT'];
         }
 
         // Try STATUS (should be faster than SELECT)
         $counts = $this->status($mailbox, ['RECENT']);
+        
+        print_r($counts);
+        
         if (is_array($counts)) {
             return (int) $counts['RECENT'];
         }
