@@ -2,7 +2,7 @@
 
 namespace bjc\roundcubeimap;
 
-// nicht implementiert: hier muss man schauen, wie man ein rcube_message_header object baut. Normalerweise macht das rcube_imap_generic/fetch
+// NOT WORKING YET!!! Have to create a rcube_message_header object, which is normally done by rcube_imap_generic/fetch but in case of embeddedmessages there is no fetch command before
 
 class embeddedmessage {
     
