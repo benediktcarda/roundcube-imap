@@ -409,7 +409,7 @@ class mailbox {
     
     public function copyMessages($messageset, $to_mailboxname) {
     
-        $result = $this->rcube_imap_generic->copy($messages, $this->mailboxname, $to_mailboxname);
+        $result = $this->rcube_imap_generic->copy($messageset, $this->mailboxname, $to_mailboxname);
         
         if ($result == false) {
             throw new \Exception('Copying messages failed.');
@@ -433,7 +433,7 @@ class mailbox {
     
     public function moveMessages($messageset, $to_mailboxname) {
         
-        $result = $this->rcube_imap_generic->move($messages, $this->mailboxname, $to_mailboxname);
+        $result = $this->rcube_imap_generic->move($messageset, $this->mailboxname, $to_mailboxname);
         
         if ($result == false) {
             throw new \Exception('Move messages failed.');
