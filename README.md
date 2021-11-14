@@ -62,21 +62,21 @@ Rename a mailbox:
 
 ```php
 // true on success, throws \Exception on error
-$connection->renameMailbox($mailboxname, $new_mailboxname);
+$result = $connection->renameMailbox($mailboxname, $new_mailboxname);
 ```
 
 Clear a mailbox (remove all messages):
 
 ```php
 // true on success, throws \Exception on error
-$connection->clearMailbox($mailboxname);
+$result = $connection->clearMailbox($mailboxname);
 ```
 
 Delete a mailbox:
 
 ```php
 // true on success, throws \Exception on error
-$connection->deleteMailbox($mailboxname);
+$result = $connection->deleteMailbox($mailboxname);
 ```
 
 #### Status of a mailbox
