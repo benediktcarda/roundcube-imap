@@ -1366,6 +1366,7 @@ class rcube_imap_generic
     public function expunge($mailbox, $messages = null)
     {
         if (!$this->select($mailbox)) {
+            print "select command not successful";
             return false;
         }
 
@@ -1380,9 +1381,11 @@ class rcube_imap_generic
         if (!empty($messages) && $messages != '*' && $this->hasCapability('UIDPLUS')) {
             $messages = self::compressMessageSet($messages);
             $result   = $this->execute('UID EXPUNGE', [$messages], self::COMMAND_NORESPONSE);
+            print "this->execute('UID EXPUNGE', [$messages], self::COMMAND_NORESPONSE)";
         }
         else {
             $result = $this->execute('EXPUNGE', null, self::COMMAND_NORESPONSE);
+            print "this->execute('EXPUNGE', , null, self::COMMAND_NORESPONSE)";
         }
 
         if ($result == self::ERROR_OK) {
