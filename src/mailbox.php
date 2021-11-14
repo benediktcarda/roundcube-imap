@@ -531,5 +531,12 @@ class mailbox {
     }
     
     
-    
+    public function appendMessage($mailstring, $flags = []) {
+        
+        $result =  $this->rcube_imap_generic->append($this->mailboxname, $mailstring, $flags);
+     
+        return $result;
+        
+    }
+        
 }
