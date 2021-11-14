@@ -1743,6 +1743,7 @@ class rcube_imap_generic
         print_r($counts);
         
         if (is_array($counts)) {
+            print "<br>is array, and recent has value: " . print_r($counts["RECENT"]);
             return (int) $counts['RECENT'];
         }
 
