@@ -465,7 +465,8 @@ class message {
     
     public function deleteMessage() {
         
-        $result = $this->rcube_imap_generic->expunge($this->mailboxname, $this->uid);
+        $this->setFlag("DELETED");
+        $result = $this->rcube_imap_generic->expunge($this->mailboxname);
         
         if ($result == false) {
             throw new \Exception('Deleting message failed.');
