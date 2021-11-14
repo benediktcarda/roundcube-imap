@@ -428,9 +428,29 @@ $number_of_unseen_messages = $mailbox->countUnseen();
 
 ```
 
+### Append messages to mailbox
 
+In case you have sent a message you maybe want to save the sent message to a folder. This package is only for managing IMAP mailboxes, not for communicating with an SMTP server to send messages.
 
+So let's assume you have sent an email with another library, e.g. PHPMailer:
+
+```php
+$mail = new \PHPMailer();
+// set all your mail credentials here
+
+// Now send message
+$mail->send();
+
+// Get mime mailstring from PHPMailer
+$mailstring = $mail->getSentMIMEMessage();
+
+// Save it do an existing mailbox object
+
+$flags = array('SEEN');
+
+$uid_of_appended_message = $mailbox->appendMessage($mailstring, $flags);
+
+```
 
 ## To Do:
 * Create class \bjc\roundcubeimap\embeddedmessage to give a possibility to deal with embedded messages
-* Add possibility to add messages to folders
