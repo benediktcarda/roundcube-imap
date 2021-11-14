@@ -530,11 +530,24 @@ class mailbox {
         
     }
     
+    /**
+     * Appends message from mime mailstring to the mailbox
+     * Throws exception on error
+     * 
+     * @param string $mailstring  mime mailstring that should be appended
+     * @param array $flags array of flags that should be set to the message
+     *
+     * @return int uid of message
+     */
     
     public function appendMessage($mailstring, $flags = []) {
         
         $result =  $this->rcube_imap_generic->append($this->mailboxname, $mailstring, $flags);
      
+        if ($result === false) {
+            throw new \Exception('Appending message to mailbox failed.');
+        }
+        
         return $result;
         
     }
