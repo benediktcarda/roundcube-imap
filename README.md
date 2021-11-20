@@ -2,7 +2,7 @@
 
 A PHP IMAP library to read and process e-mails over IMAP protocol. It works independently of PHP IMAP extension and supports newer additions to the IMAP protocol like CONDSTORE and QRESYNC which is not supported by the standard PHP IMAP extension.
 
-The code is nearly entirely extracted from the Roundcubemail project.
+The code to communicate over the IMAP protocol was extracted from the roundcubemail project (https://roundcube.net/). The interface to access the classes/methods was inspired by ddeboer/imap, another object-oriented IMAP library.
 
 ## Installation
 
@@ -444,7 +444,7 @@ $mail->send();
 // Get mime mailstring from PHPMailer
 $mailstring = $mail->getSentMIMEMessage();
 
-// Save it do an existing mailbox object
+// Save it to an existing mailbox object
 
 $flags = array('SEEN');
 
