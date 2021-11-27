@@ -541,7 +541,7 @@ class mailbox {
     
     public function count($flag) {
 
-        $result = $this->search($this->mailboxname, $flag, false, ['COUNT']);
+        $result = $rcube_imap_generic->search($this->mailboxname, $flag, false, ['COUNT']);
         
         if ($result === false) {
             throw new \Exception('Counting messages failed.');
