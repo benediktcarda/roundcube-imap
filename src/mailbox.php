@@ -290,6 +290,30 @@ class mailbox {
     }
     
     
+    
+    /**
+     * This function is a test. Don't use in production.
+     *
+     * @return obj   standard class object that contains the values uidnext, uidvalidity, recent and if available highestmodseq
+     */
+    
+    public function getStatus2() {
+        
+        $this->rcube_imap_generic->select($this->mailboxname);
+        
+        $data = $this->rcube_imap_generic->data;
+        
+        return $data;
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * Returns true if condstore is available for this mailbox, false if not
      *
