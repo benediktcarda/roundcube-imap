@@ -270,7 +270,7 @@ class mailbox {
     
     public function getStatus() {
         
-        $requestarray = array('UIDNEXT', 'UIDVALIDITY', 'RECENT', 'FLAGGED');
+        $requestarray = array('UIDNEXT', 'UIDVALIDITY', 'RECENT');
         
         if ($this->connection_data["capabilities"]["qresync"] == true && $this->connection_data["capabilities"]["condstore"] == true) {
             $requestarray[] = 'HIGHESTMODSEQ';
