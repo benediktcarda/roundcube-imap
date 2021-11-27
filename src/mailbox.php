@@ -532,7 +532,7 @@ class mailbox {
     
     
     /**
-     * Counts messages in this mailbox
+     * Counts messages in this mailbox having a certain flag set
      * Throws exception on error
      *
      * @return int number of messages
@@ -541,12 +541,14 @@ class mailbox {
     
     public function count($flag) {
 
-        $result = $this->rcube_imap_generic->search($this->mailboxname, $flag, false, ['COUNT']);
+        $index = $this->rcube_imap_generic->search($this->mailboxname, $flag, false, ['COUNT']);
         
-        if ($result === false) {
+        if ($index->is_error()) {
             throw new \Exception('Counting messages failed.');
+        } else {
+            $result = $index->count();
         }
-        
+
         return $result;
         
     }
