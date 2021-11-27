@@ -290,30 +290,6 @@ class mailbox {
     }
     
     
-    
-    /**
-     * This function is a test. Don't use in production.
-     *
-     * @return obj   standard class object that contains the values uidnext, uidvalidity, recent and if available highestmodseq
-     */
-    
-    public function getStatus2() {
-        
-        $this->rcube_imap_generic->select($this->mailboxname);
-        
-        $data = $this->rcube_imap_generic->data;
-        
-        return $data;
-        
-    }
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Returns true if condstore is available for this mailbox, false if not
      *
@@ -545,6 +521,27 @@ class mailbox {
     public function countUnseen() {
         
         $result = $this->rcube_imap_generic->countUnseen($this->mailboxname);
+        
+        if ($result === false) {
+            throw new \Exception('Counting messages failed.');
+        }
+        
+        return $result;
+        
+    }
+    
+    
+    /**
+     * Counts messages in this mailbox
+     * Throws exception on error
+     *
+     * @return int number of messages
+     *
+     */
+    
+    public function count($flag) {
+
+        $result = $this->search($this->mailboxname, $flag, false, ['COUNT']);
         
         if ($result === false) {
             throw new \Exception('Counting messages failed.');
