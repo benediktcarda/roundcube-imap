@@ -241,6 +241,22 @@ class message {
     
     
     /**
+     * Get Flags of message in an array
+     *
+     * @return array Returns an array of set flags
+     *
+     */
+    
+    public function getFlags() {
+        
+        $flags = $this->rcube_message_header->flags;
+        
+        return $flags;
+        
+    }
+    
+    
+    /**
      * Get specific header field of message
      * 
      * @param string Name of header
