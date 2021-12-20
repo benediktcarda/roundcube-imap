@@ -29,6 +29,12 @@ class attachment {
         return $this->rcube_message_part->charset;
     }
     
+    public function getContentId() {
+        
+        return $this->rcube_message_part->content_id;
+        
+    }
+    
     public function getData() {
 
         $o_part = $this->rcube_message_part;
