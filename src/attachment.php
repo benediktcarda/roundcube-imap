@@ -30,9 +30,11 @@ class attachment {
     }
     
     public function getContentId() {
-        
         return $this->rcube_message_part->content_id;
-        
+    }
+    
+    public function getMimeId() {
+        return $this->rcube_message_part->mime_id;
     }
     
     public function getData() {
