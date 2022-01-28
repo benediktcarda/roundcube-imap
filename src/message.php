@@ -406,7 +406,7 @@ class message {
         
         $this->evaluateBodystructure();
         
-        return $this->attachment[$part];
+        return $this->attachments[$part];
         
     }
     

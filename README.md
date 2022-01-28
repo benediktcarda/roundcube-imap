@@ -341,20 +341,28 @@ $inlineimages = $message->getInlineobjects(); // $inlineimages is an array of ob
 ```php
 foreach ($attachments as $attachment) {
 
-	$filename = $attachment->getFilename();
-	$charset = $attachment->getCharset(); // if available
+   $filename = $attachment->getFilename();
+   $charset = $attachment->getCharset(); // if available
+   $mime_id = $attachment->getMimeId(); // get mime_id (also called part number) to retrieve the data of the attachment later
    $data = $attachment->getData(); // content of attachment
 
 }
 ```
+Fetching (and storing) all attachments in your application no matter if you need them or not is costly. Therefore you might want to save the $filename and $mime_id in your application and only fetch the data from the IMAP server when the user requests the data of an attachment. You can fetch an attachment having the $mime_id (also called part number) from the message object later:
+
+```php
+$attachment = $message->getAttachment($mime_id); // returns the attachment object
+$data = $attachment->getData();
+```
+
 
 Inline images use the same class (\bjc\roundcubeimap\attachment) therefore it has the same available methods:
 
 ```php
 foreach ($inlineobjects as $inlineobject) {
 
-	$filename = $inlineobject->getFilename();
-	$charset = $inlineobject->getCharset(); // if available
+   $filename = $inlineobject->getFilename();
+   $charset = $inlineobject->getCharset(); // if available
    $data = $inlineobject->getData(); // content of inline image
 
 }
