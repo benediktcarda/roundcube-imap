@@ -394,6 +394,22 @@ class message {
         
     }
  
+    /**
+     * Get Attachment of message by mime_id (this is not content id)
+     *
+     * @param $part  Body part number (mime_id) that should be retrieved
+     * @return object of \bjc\roundcubeimap\attachment
+     *
+     */
+    
+    public function getAttachment($part) {
+        
+        $this->evaluateBodystructure();
+        
+        return $this->attachment[$part];
+        
+    }
+    
     
     /**
      * NOT IMPLEMENTED YET
@@ -590,7 +606,7 @@ class message {
             }
             
             if ($disposition == 'attachment' AND !empty($filename) AND $ctype_primary != 'message') {
-                $this->attachments[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $this->mailboxname, $this->uid, $rcube_message_part);
+                $this->attachments[$mime_id] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $this->mailboxname, $this->uid, $rcube_message_part);
             }
             
             if (empty($this->textplain) AND $ctype_primary == 'text' AND $ctype_secondary == 'plain' AND $childofembeddedmessage == false) {
@@ -602,7 +618,7 @@ class message {
             }
             
             if ($disposition == 'inline' AND !empty($filename) AND $ctype_primary != 'message' AND $childofembeddedmessage == false) {
-                $this->inlineobjects[] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $this->mailboxname, $this->uid, $rcube_message_part);
+                $this->inlineobjects[$mime_id] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $this->mailboxname, $this->uid, $rcube_message_part);
             }
             
             // Klasse embeddedmessage funktioniert noch nicht. Die Frage ist, wie kann man der Klasse den Message-Header rcube_message_header liefern
