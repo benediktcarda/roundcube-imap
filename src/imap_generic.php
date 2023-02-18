@@ -15,19 +15,36 @@ class imap_generic extends \rcube_imap_generic {
 
     public function fetchRawmessage($mailbox, $uid) {
 
+        if (!$this->select($mailbox)) {
+            return false;
+        }
+
         $key      = $this->nextTag();
         $cmd      = 'UID ' . 'FETCH';
         $request  = "$key $cmd $uid RFC822";
 
+        // $result = $this->execute($request);
+
         if (!$this->putLine($request)) {
-            $line   = $this->readReply();
-            $result = $this->parseResult($line);
+            $this->setError(self::ERROR_COMMAND, "Failed to send $cmd command");
+            return false;
+        }
 
-            file_put_contents("/tmp/test.txt", "Line: $line\nresult: $result\n", FILE_APPEND);
+        $message = "";
 
-            return $result;
+        do {
+            $line = $this->readFullLine(4096);
+            
+            if (!$line) {
+                break;
+            }
+
+            $message .= $line . "\r\n";
             
         }
+        while (!$this->startsWith($line, $key, true));
+
+        file_put_contents("/tmp/test.txt", "Message: $message", FILE_APPEND);
 
     }
 
