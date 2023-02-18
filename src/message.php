@@ -561,10 +561,11 @@ class message {
      * Attempt to get a raw version of the whole email - NOT WORKING YET
      */
 
-     public function getMimemessage() {
+     public function getRawmessage() {
 
-        
+        $data = $this->rcube_imap_generic->fetchRawmessage($this->mailboxname, $this->uid);
 
+        return $data;
 
     }
 
