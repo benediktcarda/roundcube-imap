@@ -23,6 +23,8 @@ class imap_generic extends \rcube_imap_generic {
             $line   = $this->readReply();
             $result = $this->parseResult($line);
 
+            file_put_contents("/tmp/test.txt", "Line: $line\nresult: $result\n", FILE_APPEND);
+
             return $result;
             
         }
