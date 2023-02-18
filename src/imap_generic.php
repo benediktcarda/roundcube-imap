@@ -36,16 +36,19 @@ class imap_generic extends \rcube_imap_generic {
 
             // skip first line
             if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/im', $line, $m)) {
+                file_put_contents("/tmp/test.txt", "found message line\n", FILE_APPEND);
                 continue;
             }
 
             // skip last line
             if (preg_match('/^A([0-9]+) OK FETCH (.*)$/im', $line, $m)) {
+                file_put_contents("/tmp/test.txt", "found OK Fetch line\n", FILE_APPEND);
                 continue;
             }
 
             // skip last but one line
             if (preg_match('/^)$/im', $line, $m)) {
+                file_put_contents("/tmp/test.txt", "found ) line\n", FILE_APPEND);
                 continue;
             }
 
