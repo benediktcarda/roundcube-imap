@@ -35,12 +35,12 @@ class imap_generic extends \rcube_imap_generic {
             }
 
             // skip first line
-            if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/i', $line, $m)) {
+            if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/im', $line, $m)) {
                 continue;
             }
 
             // skip last line
-            if (preg_match('/^\* ([0-9]+) FETCH (.*)$/i', $line, $m)) {
+            if (preg_match('/^A([0-9]+) FETCH (.*)$/im', $line, $m)) {
                 continue;
             }
 
