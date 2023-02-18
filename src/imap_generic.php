@@ -34,23 +34,18 @@ class imap_generic extends \rcube_imap_generic {
                 break;
             }
 
-            // handle UNKNOWN-CTE response - RFC 3516, try again with standard BODY request
-            if (!$found && preg_match('/^' . $key . ' NO \[(UNKNOWN-CTE|PARSE)\]/i', $line)) {
-                continue;
-            }
-
             // skip first line
-            if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/', $line, $m)) {
-                continue;
-            }
-
-            // skip last but one line
-            if (preg_match('/^\* ([0-9]+) FETCH (.*)$/', $line, $m)) {
+            if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/i', $line, $m)) {
                 continue;
             }
 
             // skip last line
-            if (preg_match('/^($/', $line, $m)) {
+            if (preg_match('/^\* ([0-9]+) FETCH (.*)$/i', $line, $m)) {
+                continue;
+            }
+
+            // skip last but one line
+            if (preg_match('/^)$/', $line, $m)) {
                 continue;
             }
 
