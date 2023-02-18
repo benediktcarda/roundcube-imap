@@ -18,7 +18,7 @@ class embeddedmessage {
     protected $textplain;
     protected $texthtml;
        
-    public function __construct(\rcube_imap_generic $rcube_imap_generic, \rcube_message_header $rcube_message_header, $mailboxname, $parent_uid) {
+    public function __construct(\bjc\roundcubeimap\imap_generic $rcube_imap_generic, \rcube_message_header $rcube_message_header, $mailboxname, $parent_uid) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->rcube_message_header = $rcube_message_header;
         $this->mailboxname = $mailboxname;

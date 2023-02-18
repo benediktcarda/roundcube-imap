@@ -17,7 +17,7 @@ class mailbox {
     protected $mailboxname;
     protected $connection_data;
        
-    public function __construct($mailboxname, \rcube_imap_generic $rcube_imap_generic, array $connection_data) {
+    public function __construct($mailboxname, \bjc\roundcubeimap\imap_generic $rcube_imap_generic, array $connection_data) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->mailboxname = $mailboxname;
         $this->connection_data = $connection_data;

@@ -17,7 +17,7 @@ class message {
     protected $textplain;
     protected $texthtml;
        
-    public function __construct(\rcube_imap_generic $rcube_imap_generic, \rcube_message_header $rcube_message_header, $mailboxname) {
+    public function __construct(\bjc\roundcubeimap\imap_generic $rcube_imap_generic, \rcube_message_header $rcube_message_header, $mailboxname) {
         $this->rcube_imap_generic = $rcube_imap_generic;
         $this->rcube_message_header = $rcube_message_header;
         $this->mailboxname = $mailboxname;
@@ -556,7 +556,17 @@ class message {
         return true;
         
     }
-    
+
+     /**
+     * Attempt to get a raw version of the whole email - NOT WORKING YET
+     */
+
+     public function getMimemessage() {
+
+        
+
+
+    }
 
     
     /**
