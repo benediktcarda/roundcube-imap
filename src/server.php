@@ -34,7 +34,7 @@ class server {
     
     public function authenticate($username, $password) {
 
-        $rcube_imap_generic = new \rcube_imap_generic();
+        $rcube_imap_generic = new \bjc\roundcubeimap\imap_generic();
         
         $result_connect = $rcube_imap_generic->connect($this->host, $username, $password, array('ssl_mode' => $this->ssl_mode));
         
