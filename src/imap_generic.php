@@ -39,7 +39,7 @@ class imap_generic extends \rcube_imap_generic {
         }
         while (!$this->startsWith($line, $key, true));
 
-        $replace_match = '^(?:A[0-9]+ OK FETCH .*|\* [0-9]+ FETCH .*|\))$(?:\r\n|\n)?';
+        $replace_match = '/^(?:A[0-9]+ OK FETCH .*|\* [0-9]+ FETCH .*|\))$(?:\r\n|\n)?/gim';
         $message_result = preg_replace($replace_match, '', $message);
 
         file_put_contents("/tmp/test.txt", "$message_result", FILE_APPEND);
