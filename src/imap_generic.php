@@ -35,22 +35,29 @@ class imap_generic extends \rcube_imap_generic {
             }
 
             // skip first line
-            if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/im', $line, $m)) {
+            if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/im', $line, $m) == 1) {
                 file_put_contents("/tmp/test.txt", "found message line\n", FILE_APPEND);
                 continue;
+            } else {
+                file_put_contents("/tmp/test.txt", "no found message line\n", FILE_APPEND);
             }
 
             // skip last line
-            if (preg_match('/^A([0-9]+) OK FETCH (.*)$/im', $line, $m)) {
+            if (preg_match('/^A([0-9]+) OK FETCH (.*)$/im', $line, $m) == 1) {
                 file_put_contents("/tmp/test.txt", "found OK Fetch line\n", FILE_APPEND);
                 continue;
+            } else {
+                file_put_contents("/tmp/test.txt", "no found OK Fetch line\n", FILE_APPEND);
             }
 
             // skip last but one line
-            if (preg_match('/^)$/im', $line, $m)) {
+            if (preg_match('/^)$/im', $line, $m) == 1) {
                 file_put_contents("/tmp/test.txt", "found ) line\n", FILE_APPEND);
                 continue;
+            } else {
+                file_put_contents("/tmp/test.txt", "no found ) line\n", FILE_APPEND);
             }
+
 
             $message .= $line . "\r\n";
             
