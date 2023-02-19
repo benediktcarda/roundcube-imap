@@ -34,37 +34,15 @@ class imap_generic extends \rcube_imap_generic {
                 break;
             }
 
-            // skip first line
-            if (preg_match('/^Message: \* ([0-9]+) FETCH (.*)$/im', $line, $m) == 1) {
-                file_put_contents("/tmp/test.txt", "found message line\n", FILE_APPEND);
-                continue;
-            } else {
-                file_put_contents("/tmp/test.txt", "no found message line\n", FILE_APPEND);
-            }
-
-            // skip last line
-            if (preg_match('/^A([0-9]+) OK FETCH (.*)$/im', $line, $m) == 1) {
-                file_put_contents("/tmp/test.txt", "found OK Fetch line\n", FILE_APPEND);
-                continue;
-            } else {
-                file_put_contents("/tmp/test.txt", "no found OK Fetch line\n", FILE_APPEND);
-            }
-
-            // skip last but one line
-            if (preg_match('/^)$/im', $line, $m) == 1) {
-                file_put_contents("/tmp/test.txt", "found ) line\n", FILE_APPEND);
-                continue;
-            } else {
-                file_put_contents("/tmp/test.txt", "no found ) line\n", FILE_APPEND);
-            }
-
-
             $message .= $line . "\r\n";
             
         }
         while (!$this->startsWith($line, $key, true));
 
-        file_put_contents("/tmp/test.txt", "Message: $message", FILE_APPEND);
+        $replace_match = '^(?:A[0-9]+ OK FETCH .*|\* [0-9]+ FETCH .*|\))$(?:\r\n|\n)?';
+        $message_result = preg_replace($replace_match, '', $message);
+
+        file_put_contents("/tmp/test.txt", "$message_result", FILE_APPEND);
 
         return $message;
 
