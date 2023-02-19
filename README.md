@@ -368,6 +368,14 @@ foreach ($inlineobjects as $inlineobject) {
 }
 ```
 
+### Retrieve full Mime message
+
+Sometimes you need to get the full mime message to deal with it further.
+
+```php
+$mimemessage = $message->getMimemessage();
+```
+
 ### Flag messages
 
 You can set and clear message flags within the mailbox object or within the message object:
@@ -394,11 +402,9 @@ $result = $mailbox->clearFlag($flags, $message_set);
 $result = $message->setFlag($flags);
 $result = $message->clearFlag($flags);
 
-
-
 ```
 
-### Copy, move, delete messages
+### Copy, move (within account), delete messages
 
 You can copy, move and delete messages within the mailbox object or within the message object:
 
@@ -457,6 +463,30 @@ $mailstring = $mail->getSentMIMEMessage();
 $flags = array('SEEN');
 
 $uid_of_appended_message = $mailbox->appendMessage($mailstring, $flags);
+
+```
+
+### Move messages into other account
+
+If you would like to move messages from one account to another, you can use the fetchMimemessage method to retrieve the message and appendMessage method together.
+
+```php
+// Get connection to source account and access the mailbox and message
+$server = new \bjc\roundcubeimap\server('hostname_account1');
+$connection = $server->authenticate('username_account1', 'password_account1');
+$mailbox = $connection->getMailbox('mailboxname_account1');
+$message = $mailbox->getMessage($uid);
+
+// fetch mime message from server
+$mimemessage = $message->getMimemessage();
+
+// Get connection to destination account and access the mailbox
+$server = new \bjc\roundcubeimap\server('hostname_account1');
+$connection = $server->authenticate('username_account1', 'password_account2');
+$mailbox = $connection->getMailbox('mailboxname_account2');
+
+// Append the mime message to the mailbox
+$mailbox->appendMessage($mimemessage);
 
 ```
 
