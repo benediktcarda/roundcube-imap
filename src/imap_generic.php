@@ -10,7 +10,16 @@ namespace bjc\roundcubeimap;
 
 class imap_generic extends \rcube_imap_generic {
 
-    public function fetchRawmessage($mailbox, $uid) {
+    /**
+     * Fetch the full MIME message of a given mailbox and uid
+     *
+     * @param string $mailbox   Name of mailbox in logged in account
+     * @param int    $uid       UID
+     *
+     * @return string message data
+     */
+
+    public function fetchMimemessage($mailbox, $uid) {
 
         if (!$this->select($mailbox)) {
             return false;
@@ -39,18 +48,10 @@ class imap_generic extends \rcube_imap_generic {
         }
         while (!$this->startsWith($line, $key, true));
 
-        $replace_match = '/^(?:A[0-9]+ OK FETCH .*|\* [0-9]+ FETCH .*|\))$(?:\r\n|\n)?/gim';
+        $replace_match = '/^(?:A[0-9]+ OK FETCH .*|\* [0-9]+ FETCH .*|\)\s*)$(?:\r\n|\n)?/im';
         $message_result = preg_replace($replace_match, '', $message);
 
-        file_put_contents("/tmp/test.txt", "$message_result", FILE_APPEND);
-
-        return $message;
-
-    }
-
-    public function appendRawmessage($mailbox, $messagedata) {
-
-        
+        return $message_result;
 
     }
 
