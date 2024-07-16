@@ -1,5 +1,5 @@
 {
-	"name" : "bjc/roundcube-imap",
+	"name" : "ivanghisleni/roundcube-imap",
 	"description" : "A PHP imap client class extracted from roundcubemail",
 	"license" : "GPL-3.0-or-later",
 	"keywords" : [
@@ -8,7 +8,10 @@
 	"authors" : [{
 			"name" : "Benedikt Carda",
 			"email" : "carda@two-wings.net"
-		}
+		},{
+		"name" : "Ivan Ghisleni",
+		"email" : "ivan.ghisleni@gmail.com"
+	}
 	],
 	"require" : {
 	},
