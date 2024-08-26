@@ -141,9 +141,10 @@ class mailbox {
      * @return array of UIDs
      */
 
-    public function searchByCriteria($criteria = ''):array
+
+    public function searchByCriteria($criteria = '', $return_uid = true):array
     {
-        $result = $this->rcube_imap_generic->search($this->mailboxname, $criteria);
+        $result = $this->rcube_imap_generic->search($this->mailboxname, $criteria, $return_uid);
 
         return $result->get();
 
