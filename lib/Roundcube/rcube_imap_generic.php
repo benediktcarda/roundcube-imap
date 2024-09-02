@@ -1189,10 +1189,11 @@ class rcube_imap_generic
      *
      * @param string $mailbox      Mailbox name
      * @param array  $qresync_data QRESYNC data (RFC5162)
+     * @param bool   $readOnly     Selecting read-only mode
      *
      * @return bool True on success, false on error
      */
-    public function select($mailbox, $qresync_data = null)
+    public function select($mailbox, $qresync_data = null, $readOnly =  false)
     {
         if (!strlen($mailbox)) {
             return false;
@@ -1218,7 +1219,16 @@ class rcube_imap_generic
             $params[] = ['QRESYNC', $qresync_data];
         }
 
-        list($code, $response) = $this->execute('SELECT', $params);
+        // Selecting mailbox with `EXAMINE\SELECT` based only $readOnly
+        $selectCommand = $readOnly ? 'EXAMINE' : 'SELECT';
+
+        list($code, $response) = $this->execute($selectCommand, $params);
+
+        // Error selecting mailbox with `EXAMINE\SELECT` retry with `SELECT\EXAMINE`
+        if($code !== self::ERROR_OK) {
+            $selectCommand = !$readOnly ? 'EXAMINE' : 'SELECT';
+            list($code, $response) = $this->execute($selectCommand, $params);
+        }
 
         if ($code == self::ERROR_OK) {
             $this->clear_mailbox_cache();

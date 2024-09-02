@@ -559,14 +559,16 @@ class message {
 
 
      /**
-     * Fetch the full MIME message
-     * 
-     * @return string mime message data
-     */
+      * Fetch the full MIME message
+      *
+      * @param bool $readOnly Selecting read-only mode
+      *
+      * @return string mime message data
+      */
 
-     public function getMimemessage() {
+     public function getMimemessage($readOnly = true) {
 
-        $data = $this->rcube_imap_generic->fetchMimemessage($this->mailboxname, $this->uid);
+        $data = $this->rcube_imap_generic->fetchMimemessage($this->mailboxname, $this->uid, $readOnly);
 
         return $data;
 
