@@ -1,5 +1,5 @@
 {
-	"name" : "ivanghisleni/roundcube-imap",
+	"name" : "benediktcarda/roundcube-imap",
 	"description" : "A PHP imap client class extracted from roundcubemail",
 	"license" : "GPL-3.0-or-later",
 	"keywords" : [
