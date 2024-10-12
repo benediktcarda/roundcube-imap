@@ -202,6 +202,7 @@ class rcube_message_header
         'bcc'       => 'bcc',
         'mbox'      => 'folder',
         'folder'    => 'folder',
+        'size'      => 'size',
         'content-transfer-encoding' => 'encoding',
         'in-reply-to'               => 'in_reply_to',
         'content-type'              => 'ctype',

@@ -134,6 +134,21 @@ class mailbox {
         return $resultarray;
         
     }
+
+    /**
+     * Expose: Executes SEARCH command by rcube_imap_generic
+     *
+     * @return array of UIDs
+     */
+
+
+    public function searchByCriteria($criteria = '', $return_uid = true):array
+    {
+        $result = $this->rcube_imap_generic->search($this->mailboxname, $criteria, $return_uid);
+
+        return $result->get();
+
+    }
     
     /**
      * Returns an object that represents the message having the given uid

@@ -15,13 +15,14 @@ class imap_generic extends \rcube_imap_generic {
      *
      * @param string $mailbox   Name of mailbox in logged in account
      * @param int    $uid       UID
+     * @param bool   $readOnly  Selecting read-only mode
      *
      * @return string message data
      */
 
-    public function fetchMimemessage($mailbox, $uid) {
+    public function fetchMimemessage($mailbox, $uid, $readOnly = false) {
 
-        if (!$this->select($mailbox)) {
+        if (!$this->select($mailbox, null, $readOnly)) {
             return false;
         }
 
