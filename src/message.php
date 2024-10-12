@@ -603,6 +603,8 @@ class message {
     
     protected function iteratethroughParts(array $parts, bool $childofembeddedmessage) {
         
+        file_put_contents("/tmp/test.txt", print_r($parts, true), FILE_APPEND);
+
         foreach ($parts as $rcube_message_part) {
             $mime_id = $rcube_message_part->mime_id;
             $subparts = $rcube_message_part->parts;
