@@ -154,4 +154,20 @@ class connection {
         
     }
 
+    /**
+     * Detects hierarchy delimiter
+     *
+     * @return string
+     */
+    public function getHierarchyDelimiter():string
+    {
+        $hierarchyDelimiter = $this->rcube_imap_generic->getHierarchyDelimiter();
+
+        if(empty($hierarchyDelimiter)) {
+            return "/";
+        }
+
+        return $hierarchyDelimiter;
+    }
+
 }
