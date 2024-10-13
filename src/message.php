@@ -586,7 +586,7 @@ class message {
             $rcube_message_part = $this->structure_part($bodystructure);
             
             $parts = array($rcube_message_part);
-            
+
             $this->iteratethroughParts($parts, false);
 
             $this->bodystructure_evaluated = true;
@@ -621,7 +621,8 @@ class message {
                 $this->iteratethroughParts($subparts, $childofembeddedmessage);
             }
             
-            if ($disposition == 'attachment' AND !empty($filename) AND $ctype_primary != 'message') {
+            // Some email programs (like SAP Netweaver) send attachments without $dispositon == 'attachment', therefore we treat message parts with empty disposition but having a filename as attachment
+            if (($disposition == 'attachment' OR empty($disposition)) AND !empty($filename) AND $ctype_primary != 'message') {
                 $this->attachments[$mime_id] = new \bjc\roundcubeimap\attachment($this->rcube_imap_generic, $this->mailboxname, $this->uid, $rcube_message_part);
             }
             
